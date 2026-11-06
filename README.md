@@ -8,7 +8,7 @@ Toda a conversão roda no navegador: o arquivo do usuário nunca é enviado para
 
 ```bash
 npm install
-npm run dev     # servidor de desenvolvimento
+npm run dev     # servidor de desenvolvimento (abre em /zzrockwell/)
 npm test        # testes do motor de conversão
 npm run build   # gera o site estático em dist/
 ```
@@ -26,3 +26,9 @@ npm run build   # gera o site estático em dist/
 - Conteúdo protegido (`EncodedData`) não é convertido, por princípio.
 
 Este projeto não é afiliado à Rockwell Automation. Studio 5000 e Logix são marcas de seus respectivos donos.
+
+## Publicação
+
+O site é publicado automaticamente no GitHub Pages a cada push no `main`
+(workflow `.github/workflows/deploy.yml`):
+https://oliveiraisabelle.github.io/zzrockwell/
