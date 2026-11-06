@@ -121,3 +121,71 @@
 :root[data-theme='sangue'] .hero::before { background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(200, 16, 46, 0.55) 34px 36px); }
 :root[data-theme] .hero > * { position: relative; }
 @media (max-width: 640px) { :root[data-theme] .hero::before { display: none; } }
+
+/* ---------- 4. Noturno (padrão): carvão, carmim, títulos mono, arcos góticos ---------- */
+.hero-art { display: none; }
+:root[data-theme='noturno'] {
+  --bg: #19181b;
+  --surface: #222125;
+  --surface-2: #1c1b1e;
+  --fg: #e9e5e7;
+  --muted: #a29aa0;
+  --line: #34303a;
+  --line-strong: #4a434d;
+  --top: #121114;
+  --top-fg: #ece8ea;
+  --accent: #b3263a;
+  --accent-hover: #cc3047;
+  --accent-soft: #2c1519;
+  --ok: #7cc79f;
+  --ok-soft: #15231c;
+  --warn: #e3a64a;
+  --warn-soft: #2a2013;
+  --bad: #f2667a;
+  --bad-soft: #2e1418;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  color-scheme: dark;
+}
+:root[data-theme='noturno'] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(180deg, rgba(25, 24, 27, 0.6), var(--bg) 520px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='200' viewBox='0 0 120 200'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='1.5'%3E%3Cpath d='M10 200V90Q10 30 60 8Q110 30 110 90V200'/%3E%3Cpath d='M28 200V100Q28 52 60 34Q92 52 92 100V200'/%3E%3Cpath d='M60 34V200'/%3E%3Ccircle cx='60' cy='70' r='10'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, repeat-x;
+  background-position: 0 0, center 64px;
+}
+:root[data-theme='noturno'] .topbar { border-bottom: 1px solid #2b282e; box-shadow: inset 0 -2px 0 var(--accent); }
+:root[data-theme='noturno'] .brand { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 15px; }
+:root[data-theme='noturno'] .brand-mark rect { fill: var(--accent); }
+:root[data-theme='noturno'] .hero::before { display: none; }
+:root[data-theme='noturno'] .hero { position: relative; min-height: 260px; padding-right: 250px; }
+:root[data-theme='noturno'] .hero-art { display: block; position: absolute; right: -20px; top: -32px; width: 260px; height: 300px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6)); }
+:root[data-theme='noturno'] .hero h1 { font-family: var(--mono); font-weight: 700; font-size: 34px; letter-spacing: -0.01em; }
+:root[data-theme='noturno'] .hero h1::before { content: '// conversor de versão'; display: block; font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 12px; }
+:root[data-theme='noturno'] .card-title, :root[data-theme='noturno'] .card h3, :root[data-theme='noturno'] .info-grid h4,
+:root[data-theme='noturno'] .banner-title, :root[data-theme='noturno'] .drop-title, :root[data-theme='noturno'] .stepper li { font-family: var(--mono); }
+:root[data-theme='noturno'] .card { border: 1px solid #3a2f34; border-top: 3px solid var(--accent); border-radius: 6px; background: linear-gradient(180deg, #252327, #201f23); }
+:root[data-theme='noturno'] .drop { border: 1px dashed #5a3a41; border-radius: 6px; background: rgba(34, 33, 37, 0.85); }
+:root[data-theme='noturno'] .drop:hover, :root[data-theme='noturno'] .drop.dragging { border-color: var(--accent); background: rgba(44, 21, 25, 0.85); }
+:root[data-theme='noturno'] .facts, :root[data-theme='noturno'] .changes, :root[data-theme='noturno'] .stat,
+:root[data-theme='noturno'] .convert-row, :root[data-theme='noturno'] .finding, :root[data-theme='noturno'] .banner { border-radius: 4px; }
+:root[data-theme='noturno'] .btn-primary, :root[data-theme='noturno'] .btn-ghost, :root[data-theme='noturno'] .version { border-radius: 4px; }
+:root[data-theme='noturno'] .stat { border-bottom: 2px solid var(--accent); }
+:root[data-theme='noturno'] .info-grid > div { border-top: 2px solid var(--accent); }
+:root[data-theme='noturno'] .version.selected { box-shadow: 0 0 14px rgba(179, 38, 58, 0.45); }
+:root[data-theme='noturno'] .file-icon { font-family: var(--mono); border-color: #5a3a41; }
+:root[data-theme='noturno'] footer { position: relative; }
+:root[data-theme='noturno'] footer::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: -14px; height: 14px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='14' viewBox='0 0 80 14'%3E%3Cpath d='M0 10Q20 2 40 10T80 10' fill='none' stroke='%23b3263a' stroke-opacity='0.5' stroke-width='1.4'/%3E%3Cpath d='M16 6l3-6 1 7M54 12l4 2-5 0M34 9l-2-6 4 5' fill='none' stroke='%23b3263a' stroke-opacity='0.5' stroke-width='1.2'/%3E%3C/svg%3E") repeat-x;
+}
+@media (max-width: 640px) {
+  :root[data-theme='noturno'] .hero { padding-right: 0; min-height: 0; }
+  :root[data-theme='noturno'] .hero-art { position: static; width: 150px; height: 173px; margin: -12px 0 4px auto; float: right; }
+  :root[data-theme='noturno'] .hero h1 { font-size: 24px; }
+}
+.hero-art { stroke: none; fill: none; overflow: visible; }
+:root[data-theme='noturno'] .hero h1 { font-size: 30px; }
+@media (max-width: 640px) { :root[data-theme='noturno'] .hero h1 { font-size: 22px; } :root[data-theme='noturno'] .hero-art { width: 120px; height: 138px; } }

@@ -1,4 +1,5 @@
 import { useState, type DragEvent } from 'react'
+import { HeroArt } from './HeroArt'
 import { analyze, availableTargets, convert, parseL5x, L5xError, type ConversionResult, type L5xInfo } from './engine/l5x'
 
 interface Loaded {
@@ -113,6 +114,7 @@ function App() {
 
       <main>
         <section className="hero">
+          <HeroArt />
           <h1>Rebaixe projetos L5X para versões anteriores do Logix Designer</h1>
           <p>
             Envie uma exportação L5X, escolha a versão de destino e receba o arquivo convertido com um relatório do que
