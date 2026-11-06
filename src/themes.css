@@ -189,3 +189,29 @@
 .hero-art { stroke: none; fill: none; overflow: visible; }
 :root[data-theme='noturno'] .hero h1 { font-size: 30px; }
 @media (max-width: 640px) { :root[data-theme='noturno'] .hero h1 { font-size: 22px; } :root[data-theme='noturno'] .hero-art { width: 120px; height: 138px; } }
+
+/* ---------- Baixo e Sangue com ilustração ---------- */
+:root[data-theme='sangue'] .hero::before { display: none; }
+:root[data-theme='sangue'] .hero { position: relative; min-height: 250px; padding-right: 250px; }
+:root[data-theme='sangue'] .hero-art { display: block; position: absolute; right: -20px; top: -36px; width: 260px; height: 300px; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6)); }
+@media (max-width: 640px) {
+  :root[data-theme='sangue'] .hero { padding-right: 0; min-height: 0; }
+  :root[data-theme='sangue'] .hero-art { position: static; width: 120px; height: 138px; margin: -12px 0 4px auto; float: right; }
+  :root[data-theme='sangue'] .hero h1 { font-size: 22px; }
+}
+
+/* ---------- Fonte dos títulos ---------- */
+:root[data-fonte] .hero h1, :root[data-fonte] .brand, :root[data-fonte] .card-title, :root[data-fonte] .card h3,
+:root[data-fonte] .info-grid h4, :root[data-fonte] .banner-title, :root[data-fonte] .drop-title, :root[data-fonte] .stepper li,
+:root[data-fonte] .stat-num { font-family: var(--heading-font); }
+:root[data-fonte='oswald'] { --heading-font: Oswald, 'Arial Narrow', sans-serif; }
+:root[data-fonte='oswald'] .hero h1 { font-weight: 700; letter-spacing: 0.01em; font-size: 38px; line-height: 1.15; }
+:root[data-fonte='oswald'] .card-title, :root[data-fonte='oswald'] .drop-title, :root[data-fonte='oswald'] .banner-title { font-weight: 500; letter-spacing: 0.02em; font-size: 18px; }
+:root[data-fonte='oswald'] .brand { text-transform: uppercase; letter-spacing: 0.06em; }
+:root[data-fonte='cinzel'] { --heading-font: Cinzel, 'Trajan Pro', Georgia, serif; }
+:root[data-fonte='cinzel'] .hero h1 { font-weight: 700; text-transform: none; letter-spacing: 0.02em; font-size: 34px; }
+:root[data-fonte='cinzel'] .card-title, :root[data-fonte='cinzel'] .drop-title, :root[data-fonte='cinzel'] .banner-title { font-weight: 700; letter-spacing: 0.03em; }
+:root[data-fonte='grotesk'] { --heading-font: 'Space Grotesk', system-ui, sans-serif; }
+:root[data-fonte='grotesk'] .hero h1 { font-weight: 700; text-transform: none; letter-spacing: -0.02em; font-size: 36px; }
+:root[data-fonte='grotesk'] .card-title, :root[data-fonte='grotesk'] .drop-title, :root[data-fonte='grotesk'] .banner-title { font-weight: 700; }
+@media (max-width: 640px) { :root[data-fonte] .hero h1 { font-size: 26px; } }
