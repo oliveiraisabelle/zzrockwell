@@ -1,0 +1,123 @@
+/* Temas opcionais, ativados por data-theme no <html>. */
+
+/* ---------- 1. Baixo e Sangue: preto, carvão e vermelho-sangue ---------- */
+:root[data-theme='sangue'] {
+  --bg: #0c0b0d;
+  --surface: #151317;
+  --surface-2: #1b181d;
+  --fg: #ece6e8;
+  --muted: #9a9096;
+  --line: #2a2529;
+  --line-strong: #3d353b;
+  --top: #070607;
+  --top-fg: #f1e9ec;
+  --accent: #c8102e;
+  --accent-hover: #e0233f;
+  --accent-soft: #2a0d13;
+  --ok: #6fcf97;
+  --ok-soft: #10231a;
+  --warn: #e9a23b;
+  --warn-soft: #291d0d;
+  --bad: #ff5468;
+  --bad-soft: #2d1015;
+  --shadow: 0 0 0 1px rgba(200, 16, 46, 0.06), 0 12px 32px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+:root[data-theme='sangue'] .hero h1 { text-transform: uppercase; letter-spacing: 0.01em; font-weight: 800; }
+:root[data-theme='sangue'] .hero h1::after { content: ''; display: block; width: 72px; height: 4px; margin-top: 16px; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+:root[data-theme='sangue'] .btn-primary { box-shadow: 0 0 0 1px #ff3b5520, 0 6px 20px rgba(200, 16, 46, 0.35); }
+:root[data-theme='sangue'] .version.selected { box-shadow: 0 0 16px rgba(200, 16, 46, 0.45); }
+
+/* ---------- 2. Crepúsculo Vampiro: roxo-acinzentado, lilás e vinho ---------- */
+:root[data-theme='crepusculo'] {
+  --bg: #16121c;
+  --surface: #201a28;
+  --surface-2: #261f30;
+  --fg: #ece5f3;
+  --muted: #a99db8;
+  --line: #352c41;
+  --line-strong: #4a3e59;
+  --top: #0f0b14;
+  --top-fg: #ece5f3;
+  --accent: #b02a4a;
+  --accent-hover: #c93a5c;
+  --accent-soft: #2f1626;
+  --ok: #8fd6b4;
+  --ok-soft: #16271f;
+  --warn: #e6b866;
+  --warn-soft: #2b2316;
+  --bad: #ff7189;
+  --bad-soft: #321622;
+  --shadow: 0 10px 30px rgba(5, 0, 12, 0.45);
+  color-scheme: dark;
+}
+:root[data-theme='crepusculo'] body {
+  background:
+    radial-gradient(900px 420px at 85% -10%, rgba(130, 70, 170, 0.28), transparent 70%),
+    radial-gradient(700px 380px at -10% 10%, rgba(176, 42, 74, 0.18), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+:root[data-theme='crepusculo'] .topbar { background: rgba(15, 11, 20, 0.75); backdrop-filter: blur(8px); border-bottom: 1px solid #3a2f48; box-shadow: 0 1px 0 rgba(176, 42, 74, 0.6); }
+:root[data-theme='crepusculo'] .hero h1 {
+  background: linear-gradient(90deg, #f3ecfa 0%, #d9b8e8 55%, #e0718b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+:root[data-theme='crepusculo'] .card { border-color: #3b3048; background: linear-gradient(180deg, #221b2b, #1e1826); }
+:root[data-theme='crepusculo'] .btn-primary { background: linear-gradient(135deg, #b02a4a, #7e3a8c); }
+:root[data-theme='crepusculo'] .btn-primary:hover { background: linear-gradient(135deg, #c93a5c, #9046a0); }
+:root[data-theme='crepusculo'] .version.selected { background: linear-gradient(135deg, #b02a4a, #7e3a8c); border-color: transparent; }
+
+/* ---------- 3. Cinza Lunar: cinza-azulado pálido, grafite e vermelho ---------- */
+:root[data-theme='lunar'] {
+  --bg: #c9d0d9;
+  --surface: #e4e8ee;
+  --surface-2: #d8dee6;
+  --fg: #15171c;
+  --muted: #4a525e;
+  --line: #b3bcc8;
+  --line-strong: #98a3b2;
+  --top: #15171c;
+  --top-fg: #e4e8ee;
+  --accent: #a3122a;
+  --accent-hover: #87101f;
+  --accent-soft: #f0d8dc;
+  --ok: #1d6b45;
+  --ok-soft: #d4e7dc;
+  --warn: #8a5300;
+  --warn-soft: #efe0c6;
+  --bad: #a3122a;
+  --bad-soft: #f0d8dc;
+  --shadow: 4px 4px 0 #15171c;
+  color-scheme: light;
+}
+:root[data-theme='lunar'] .card { border: 2px solid #15171c; border-radius: 4px; }
+:root[data-theme='lunar'] .drop { border-color: #15171c; border-radius: 4px; background: var(--surface); }
+:root[data-theme='lunar'] .facts, :root[data-theme='lunar'] .changes, :root[data-theme='lunar'] .stat,
+:root[data-theme='lunar'] .convert-row, :root[data-theme='lunar'] .finding, :root[data-theme='lunar'] .banner { border-radius: 3px; }
+:root[data-theme='lunar'] .btn-primary, :root[data-theme='lunar'] .btn-ghost, :root[data-theme='lunar'] .version { border-radius: 3px; }
+:root[data-theme='lunar'] .btn-primary { box-shadow: 3px 3px 0 #15171c; }
+:root[data-theme='lunar'] .btn-primary:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #15171c; }
+:root[data-theme='lunar'] .hero h1 { font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; }
+:root[data-theme='lunar'] .topbar { border-bottom-color: var(--accent); }
+
+/* ---------- Motivo comum: cordas de baixo no topo ---------- */
+:root[data-theme] .hero { position: relative; }
+:root[data-theme] .hero::before {
+  content: '';
+  position: absolute;
+  inset: -40px -16px auto auto;
+  width: min(46%, 380px);
+  height: 150px;
+  pointer-events: none;
+  opacity: 0.55;
+  background: repeating-linear-gradient(180deg, transparent 0 34px, var(--line-strong) 34px 36px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 40%, #000 80%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 40%, #000 80%, transparent);
+  transform: rotate(-8deg);
+}
+:root[data-theme='sangue'] .hero::before { background: repeating-linear-gradient(180deg, transparent 0 34px, rgba(200, 16, 46, 0.55) 34px 36px); }
+:root[data-theme] .hero > * { position: relative; }
+@media (max-width: 640px) { :root[data-theme] .hero::before { display: none; } }
