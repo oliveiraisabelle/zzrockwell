@@ -12,8 +12,7 @@ import App from './App.tsx'
 
 // Pré-visualização de tema: ?tema=sangue | noturno | crepusculo | lunar | claro
 const tema = new URLSearchParams(location.search).get('tema')
-if (tema === 'claro') delete document.documentElement.dataset.theme
-else if (tema) document.documentElement.dataset.theme = tema
+if (tema) document.documentElement.dataset.theme = tema
 
 // Pré-visualização de fonte dos títulos: ?fonte=oswald | cinzel | grotesk
 const fonte = new URLSearchParams(location.search).get('fonte')
