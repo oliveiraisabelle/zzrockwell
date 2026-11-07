@@ -1,6 +1,9 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
 import { analyze, availableTargets, convert, parseL5x, L5xError } from '../l5x'
+import { diffLines } from '../diff'
+import { signatureOf } from '../signature'
+import { xray } from '../xray'
 
 // Arquivos sintéticos, montados à mão no formato L5X. Devem ser substituídos
 // por exportações reais do Studio 5000 assim que houver.
@@ -56,7 +59,9 @@ describe('convert', () => {
     expect(result.output).toContain('SoftwareRevision="30.00"')
     expect(result.output).toContain('MajorRev="30"')
     expect(result.output).toContain('MinorRev="11"')
-    const strip = (s: string) => s.replace(/SoftwareRevision="[^"]*"/, '').replace(/MajorRev="[^"]*"/, '')
+    expect(result.output).toContain('<Module Name="Local" CatalogNumber="1756-L83E" Major="30" Minor="11"/>')
+    const strip = (s: string) =>
+      s.replace(/SoftwareRevision="[^"]*"/, '').replace(/MajorRev="[^"]*"/, '').replace(/ Major="[^"]*"/, '')
     expect(strip(result.output!)).toBe(strip(input))
   })
 
@@ -88,5 +93,69 @@ describe('convert', () => {
 
   it('recusa conversão para versão igual ou mais nova', () => {
     expect(() => convert(project(), 33)).toThrow(L5xError)
+  })
+})
+
+describe('troca de controlador', () => {
+  it('troca o CLP e o módulo local mantendo a versão', () => {
+    const result = convert(project(), 33, { processorType: '1756-L85E' })
+    expect(result.ok).toBe(true)
+    expect(result.output).toContain('ProcessorType="1756-L85E"')
+    expect(result.output).toContain('<Module Name="Local" CatalogNumber="1756-L85E" Major="33"')
+    expect(result.output).toContain('SoftwareRevision="33.01"')
+  })
+
+  it('troca o CLP e rebaixa junto, usando a família nova', () => {
+    const result = convert(project(), 24, { processorType: '1756-L73' })
+    expect(result.ok).toBe(true)
+    expect(result.output).toContain('ProcessorType="1756-L73"')
+    expect(result.output).toContain('SoftwareRevision="24.00"')
+  })
+
+  it('oferece a versão atual quando troca o CLP', () => {
+    const info = analyze(parseL5x(project()))
+    expect(availableTargets(info, '1756-L73')).toContain(33)
+    expect(availableTargets(info, '1756-L73')).toContain(24)
+    expect(availableTargets(info)).not.toContain(33)
+  })
+
+  it('bloqueia troca entre CLP de segurança e comum', () => {
+    const result = convert(project(), 33, { processorType: '1756-L83ES' })
+    expect(result.ok).toBe(false)
+  })
+})
+
+describe('assinatura aprendida', () => {
+  it('aponta itens que não existem nos arquivos ensinados', () => {
+    const learned = signatureOf(parseL5x(project()))
+    const extra = '<Parameters><Parameter Name="P1" DataType="BOOL" Usage="Input" Novo="1"/></Parameters>'
+    const result = convert(project({ extra }), 30, { learned })
+    const f = result.findings.find((x) => x.details)
+    expect(f?.details).toContain('Parameter@Novo')
+  })
+})
+
+describe('raio-X e comparação', () => {
+  it('conta programas, rotinas e módulos', () => {
+    const x = xray(parseL5x(project()))
+    expect(x.programs).toBe(1)
+    expect(x.routines).toEqual({ RLL: 1 })
+    expect(x.rungs).toBe(1)
+    expect(x.modules[0].catalog).toBe('1756-L83E')
+  })
+
+  it('ignora elementos de contexto em exportação parcial', () => {
+    const x = xray(parseL5x(routine))
+    expect(x.programs).toBe(0)
+    expect(x.routines).toEqual({ RLL: 1 })
+  })
+
+  it('mostra só os trechos alterados', () => {
+    const input = project()
+    const d = diffLines(input, convert(input, 30, { processorType: '1756-L85E' }).output!)
+    const changed = d.map((c) => `${c.old.changed}>${c.new.changed}`)
+    expect(changed).toContain('33.01>30.00')
+    expect(changed).toContain('1756-L83E>1756-L85E')
+    expect(d.every((c) => c.old.before.length <= 49)).toBe(true)
   })
 })
