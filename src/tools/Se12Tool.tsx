@@ -1,3 +1,4 @@
+import { HeroArt } from '../HeroArt'
 import { useMemo, useState } from 'react'
 import { convertToSe12, DisplayError, inspectDisplay, isValidPrefix, type DisplayInfo } from '../engine/se12'
 import { decodeText, encodeText, ENCODING_LABEL, type TextFile } from '../engine/textfile'
@@ -57,6 +58,7 @@ export function Se12Tool() {
   return (
     <>
       <section className="hero">
+        <HeroArt />
         <h1>Leve telas das versões 13 a 16 para a versão 12</h1>
         <p>
           Envie o XML de uma tela exportada de uma versão mais nova do supervisório. O site tira o que a versão 12 não

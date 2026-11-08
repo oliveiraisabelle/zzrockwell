@@ -1,7 +1,21 @@
-/** Ilustração original: baixo vermelho sob a lua, com um morcego. */
+import { DoceArt } from './art/DoceArt'
+import { EstudioArt } from './art/EstudioArt'
+import { QuartoArt } from './art/QuartoArt'
+import { useTheme } from './art/useTheme'
+
+/** Ilustração do topo de cada ferramenta, de acordo com o tema. */
 export function HeroArt() {
+  const theme = useTheme()
+  if (theme === 'quarto') return <QuartoArt />
+  if (theme === 'doce') return <DoceArt />
+  if (theme === 'estudio') return <EstudioArt />
+  return <BaixoArt />
+}
+
+/** Ilustração original: baixo vermelho sob a lua, com um morcego. */
+function BaixoArt() {
   return (
-    <svg className="hero-art" viewBox="0 0 260 300" aria-hidden="true">
+    <svg className="hero-art hero-art-baixo" viewBox="0 0 260 300" aria-hidden="true">
       <defs>
         <radialGradient id="moon" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#d8d2d6" />
@@ -66,7 +80,7 @@ export function HeroArt() {
         <rect x="117" y="262" width="26" height="9" rx="1.5" fill="#bdb5ba" />
         {/* cordas */}
         {[125, 128.5, 131.5, 135].map((x) => (
-          <line key={x} x1={x} x2={x} y1="56" y2="266" stroke="#e6e0e3" strokeWidth="0.7" opacity="0.85" />
+          <line className="string" key={x} x1={x} x2={x} y1="56" y2="266" stroke="#e6e0e3" strokeWidth="0.7" opacity="0.85" />
         ))}
         {/* botões */}
         <circle cx="158" cy="262" r="4.5" fill="#0b0a0c" stroke="#bdb5ba" strokeWidth="1" />
