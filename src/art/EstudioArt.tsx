@@ -1,14 +1,13 @@
 import baixista from './baixista.webp'
 
-// Fan art da baixista vampira (imagem fornecida pela Isabelle), com moldura de
-// pôster pregado e cabos pendurados.
+// Imagem da baixista (enviada pela Isabelle) sobre um painel vermelho,
+// com as bordas esfumadas no fundo escuro.
 export function EstudioArt() {
   return (
     <div className="hero-art hero-art-estudio" aria-hidden="true">
-      <div className="estudio-poster">
+      <div className="estudio-figura">
+        <span className="estudio-painel" />
         <img src={baixista} alt="" width={720} height={960} />
-        <span className="tape tape-1" />
-        <span className="tape tape-2" />
       </div>
     </div>
   )

@@ -111,9 +111,9 @@ function App() {
         </div>
       </header>
 
-      <Decor />
       <BatSwarm />
       <div className="shell">
+        <Decor />
         <nav className={`sidebar${menuOpen ? ' open' : ''}`} aria-label="Ferramentas">
           {TOOL_GROUPS.map((g) => (
             <div key={g.id} className="nav-group">

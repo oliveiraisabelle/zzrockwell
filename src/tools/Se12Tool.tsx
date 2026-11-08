@@ -59,6 +59,7 @@ export function Se12Tool() {
     <>
       <section className="hero">
         <HeroArt />
+        <div className="hero-kicker">Telas SE12</div>
         <h1>Leve telas das versões 13 a 16 para a versão 12</h1>
         <p>
           Envie o XML de uma tela exportada de uma versão mais nova do supervisório. O site tira o que a versão 12 não

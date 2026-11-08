@@ -6,12 +6,18 @@ export function Decor() {
   const theme = useTheme()
   if (theme === 'estudio') {
     return (
-      <svg className="decor decor-cabos" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M-20 2C200 40 380 38 520 6" />
-        <path d="M300 0C420 34 640 36 760 4" className="cabo-vermelho" />
-        <path d="M640 2C820 42 1000 32 1220 4" />
-        <path d="M900 0C980 24 1100 26 1220 12" className="cabo-vermelho" />
-      </svg>
+      <>
+        <svg className="decor decor-gotico" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+          <path d="M-40 520V200C-40 110 20 50 60 20C100 50 160 110 160 200V520" /><path d="M200 520V200C200 110 260 50 300 20C340 50 400 110 400 200V520" /><path d="M440 520V200C440 110 500 50 540 20C580 50 640 110 640 200V520" /><path d="M680 520V200C680 110 740 50 780 20C820 50 880 110 880 200V520" /><path d="M920 520V200C920 110 980 50 1020 20C1060 50 1120 110 1120 200V520" /><path d="M1160 520V200C1160 110 1220 50 1260 20C1300 50 1360 110 1360 200V520" />
+          <path d="M-10 520V215C-10 140 30 90 60 66C90 90 130 140 130 215V520" /><path d="M230 520V215C230 140 270 90 300 66C330 90 370 140 370 215V520" /><path d="M470 520V215C470 140 510 90 540 66C570 90 610 140 610 215V520" /><path d="M710 520V215C710 140 750 90 780 66C810 90 850 140 850 215V520" /><path d="M950 520V215C950 140 990 90 1020 66C1050 90 1090 140 1090 215V520" /><path d="M1190 520V215C1190 140 1230 90 1260 66C1290 90 1330 140 1330 215V520" />
+        </svg>
+        <svg className="decor decor-espinhos" viewBox="0 0 360 260" aria-hidden="true">
+          <path d="M360 40C300 70 250 120 210 180S120 250 40 260" />
+          <path d="M300 74l-10-22M262 104l18-14M236 136l-16-12M214 168l20-6M182 206l-8-20M150 228l14 12M110 246l-6-18M70 256l10 14" />
+          <path d="M260 110C230 120 200 150 190 190" />
+          <path d="M228 128l-6-14M206 156l14-2" />
+        </svg>
+      </>
     )
   }
   if (theme === 'doce') {
