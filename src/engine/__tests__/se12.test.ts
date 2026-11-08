@@ -7,12 +7,13 @@ import { decodeText, encodeText } from '../textfile'
 const display = `<?xml version="1.0" encoding="UTF-16"?>
 <gfx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Gfx-SE16.xsd">
   <displaySettings displayType="replace" name="Tela_Bombas" backColor="black"/>
-  <rectangle name="Fundo" left="0" top="0" width="100" height="50" cornerRadius="8" borderColor="red"/>
-  <group name="Bomba1" isReferenceObject="true" linkSize="true">
+  <rectangle name="Fundo" exposeToVba="notExposed" left="0" top="0" width="100" height="50" cornerRadius="8" borderColor="red"/>
+  <group name="Bomba1" exposeToVba="notExposed" isReferenceObject="true" linkSize="true">
     <parameters>
       <parameter name="#1" description="Tag" value="[PLC]P101"/>
     </parameters>
-    <polygon name="Corpo" left="1" top="1"/>
+    <polygon name="Corpo" exposeToVba="notExposed" left="1" top="1"/>
+    <numericDisplay name="Vazao" exposeToVba="notExposed"><connections><connection name="Value" expression="{[PLC]FT101}"/></connections></numericDisplay>
   </group>
   <button name="BtnLiga" style="line" remarkCheck="true" remarkInfo="x" left="5">
     <confirm message="Ligar?"/>
@@ -73,7 +74,7 @@ describe('convertToSe12', () => {
 
   it('mantém o resto igual e o XML válido', () => {
     expect(r.output).toContain('<caption caption="Liga"/>')
-    expect(r.output).toContain('<polygon name="Corpo" left="1" top="1"/>')
+    expect(r.output).toContain('<polygon name="Corpo" exposeToVba="notExposed" left="1" top="1"/>')
     expect(() => inspectDisplay(r.output)).not.toThrow()
     expect(r.output).not.toMatch(/\n\s*\n/)
   })
@@ -83,6 +84,8 @@ describe('convertToSe12', () => {
     expect(p.output).toContain('name="IMP_Fundo"')
     expect(p.output).not.toContain('IMP_IMP_')
     expect(p.output).toContain('name="Tela_Bombas"')
+    expect(p.output).toContain('<connection name="Value"')
+    expect(p.output).toContain('name="IMP_Vazao"')
     expect(convertToSe12(p.output, { prefix: 'IMP_' }).fixes.find((f) => f.id === 'prefix')!.count).toBe(0)
     expect(() => convertToSe12(display, { prefix: 'a b' })).toThrow(DisplayError)
   })
