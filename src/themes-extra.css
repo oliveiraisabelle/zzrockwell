@@ -142,6 +142,14 @@ body.tremor main { animation: tremor 0.45s linear; }
 :root[data-theme='estudio'] .shell { background: var(--bg); position: relative; overflow: hidden; }
 :root[data-theme='estudio'] footer { border-top: none; margin-top: 0; }
 :root[data-theme='estudio'] .footer-inner { background: #161417; padding-left: 28px; padding-right: 28px; color: #8f868b; }
+/* a moldura é só uma borda fina: o site ocupa a largura toda da tela */
+:root[data-theme='estudio'] body { padding: 0 14px 14px; }
+:root[data-theme='estudio'] .topbar-inner, :root[data-theme='estudio'] .shell, :root[data-theme='estudio'] .footer-inner { max-width: none; }
+:root[data-theme='estudio'] main { max-width: 1180px; padding-left: 32px; padding-right: 32px; }
+@media (max-width: 640px) {
+  :root[data-theme='estudio'] body { padding: 0; }
+  :root[data-theme='estudio'] main { padding-left: 16px; padding-right: 16px; }
+}
 :root[data-theme='estudio'] .mono, :root[data-theme='estudio'] .nav-tag, :root[data-theme='estudio'] .nav-group-title,
 :root[data-theme='estudio'] .privacy-pill, :root[data-theme='estudio'] .hero p, :root[data-theme='estudio'] .stepper li,
 :root[data-theme='estudio'] .howto summary { font-family: var(--mono-font); }
