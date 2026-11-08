@@ -43,7 +43,7 @@ export function inspectDisplay(text: string): DisplayInfo {
   const display = root.getElementsByTagName('displaySettings')[0] ?? root
   return {
     version: schema ? Number(schema[1]) : undefined,
-    objectCount: root.querySelectorAll('[name]').length,
+    objectCount: root.querySelectorAll('[exposeToVba]').length || root.querySelectorAll('[name]').length,
     name: display.getAttribute('name') ?? undefined,
   }
 }
@@ -153,6 +153,10 @@ class Fixer {
       'Botões e campos perdem a confirmação, o pedido de comentário e a assinatura eletrônica. Confira se a operação precisa disso.',
       'review',
     )
+    // Primeiro os blocos inteiros (eles já levam os atributos de dentro), depois os atributos soltos.
+    for (const tag of ['useVariable', 'eSignature', 'confirm']) {
+      this.blocks(new RegExp(`(?:\\r?\\n[ \\t]*)?(?:<${tag}\\b[^>]*\\/>|<${tag}\\b[^>]*>[\\s\\S]*?<\\/${tag}>)`, 'g'), fix)
+    }
     const names = ['remarkInfo', 'remarkCheck', 'displayOnScreenKeypad', 'keypadCustomCaption', 'ConfirmationMessage', 'ShowConfirmationMessage']
     const re = new RegExp(`\\s+(?:${names.join('|')})\\s*=\\s*"[^"]*"`, 'gi')
     this.startTags((_tag, attrs) => {
@@ -161,9 +165,6 @@ class Fixer {
       this.touch(fix, attr(attrs, 'name'), n)
       return attrs.replace(re, '')
     })
-    for (const tag of ['eSignature', 'useVariable', 'confirm']) {
-      this.blocks(new RegExp(`(?:\\r?\\n[ \\t]*)?(?:<${tag}\\b[^>]*\\/>|<${tag}\\b[^>]*>[\\s\\S]*?<\\/${tag}>)`, 'g'), fix)
-    }
   }
 
   prefix(prefix: string) {
@@ -173,9 +174,10 @@ class Fixer {
       'Evita conflito com objetos de mesmo nome na tela de destino. Comandos que citam objetos pelo nome precisam ser ajustados.',
       'review',
     )
-    this.startTags((tag, attrs) => {
-      // O nome da própria tela fica como está; só os objetos ganham prefixo.
-      if (tag === 'displaySettings') return attrs
+    this.startTags((_tag, attrs) => {
+      // Só objetos gráficos (todos têm exposeToVba). Assim ficam de fora o nome
+      // da tela e as conexões (name="Value"), que quebrariam se renomeadas.
+      if (!/\sexposeToVba\s*=/.test(attrs)) return attrs
       const name = attr(attrs, 'name')
       if (name === undefined || name === '' || name.startsWith(prefix)) return attrs
       this.touch(fix, undefined)

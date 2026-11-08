@@ -24,7 +24,7 @@ export const TOOLS: ToolInfo[] = [
     id: 'l5x',
     group: 'logix',
     name: 'Conversor L5X',
-    tag: 'v20–36',
+    tag: 'v20–38',
     ready: true,
     summary: 'Rebaixa a versão e troca o modelo do CLP em exportações L5X.',
     plans: [],
