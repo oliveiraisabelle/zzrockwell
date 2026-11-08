@@ -33,9 +33,9 @@ export const TOOLS: ToolInfo[] = [
     id: 'telas-se12',
     group: 'telas',
     name: 'Telas para SE12',
-    tag: 'XML',
-    ready: false,
-    summary: 'Limpa o XML de telas exportadas da versão 15 ou 16 para importar sem erro na versão 12.',
+    tag: 'v16→12',
+    ready: true,
+    summary: 'Limpa o XML de telas exportadas das versões 13 a 16 para importar sem erro na versão 12.',
     plans: [
       'Troca o schema do arquivo para o da versão 12.',
       'Remove vínculos de objetos globais e controles ActiveX que a versão 12 não aceita.',

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { L5xTool } from './tools/L5xTool'
+import { Se12Tool } from './tools/Se12Tool'
 import { SoonTool } from './tools/SoonTool'
 import { TOOLS, TOOL_GROUPS, type ToolId } from './tools/catalog'
 
@@ -126,7 +127,9 @@ function App() {
         </nav>
         {menuOpen && <div className="scrim" onClick={() => setMenuOpen(false)} />}
 
-        <main>{active.ready ? <L5xTool /> : <SoonTool tool={active} />}</main>
+        <main>
+          {tool === 'l5x' ? <L5xTool /> : tool === 'telas-se12' ? <Se12Tool key={tool} /> : <SoonTool tool={active} />}
+        </main>
       </div>
 
       <footer>
