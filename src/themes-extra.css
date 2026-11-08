@@ -1,0 +1,310 @@
+/* Temas com mais personalidade (em teste): ?tema=quarto | estudio | doce */
+
+/* ================= Comum: ilustração, cordas, morcegos ================= */
+:root[data-theme='quarto'] .hero,
+:root[data-theme='doce'] .hero,
+:root[data-theme='estudio'] .hero { position: relative; min-height: 270px; padding-right: 300px; }
+:root[data-theme='quarto'] .hero::before,
+:root[data-theme='doce'] .hero::before,
+:root[data-theme='estudio'] .hero::before { display: none; }
+:root[data-theme='quarto'] .hero-art,
+:root[data-theme='doce'] .hero-art { display: block; position: absolute; right: -16px; top: -28px; width: 320px; height: 290px; }
+
+.hero:hover .string { animation: pluck 0.12s linear 6; }
+@keyframes pluck { 50% { transform: translateX(0.8px); } }
+
+.bats { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+.bat { position: absolute; left: -80px; width: calc(70px * var(--s, 1)); fill: var(--bat, #120c10); animation: fly 2.6s cubic-bezier(0.4, 0.1, 0.6, 1) forwards; filter: drop-shadow(0 0 6px var(--bat-glow, transparent)); }
+.bat path { animation: flap 0.18s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+@keyframes fly { 0% { transform: translate(0, 0); } 50% { transform: translate(55vw, -40px); } 100% { transform: translate(115vw, 30px); } }
+@keyframes flap { to { transform: scaleY(0.7); } }
+body.tremor main { animation: tremor 0.45s linear; }
+@keyframes tremor { 20% { transform: translate(-3px, 1px); } 40% { transform: translate(3px, -1px); } 60% { transform: translate(-2px, 0); } 80% { transform: translate(2px, 1px); } }
+
+.decor { display: none; }
+.hero-kicker { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .bat, .bat path, .hero:hover .string, .nota, .doce-bob, .bubble, .steam, .vinyl-groove { animation: none !important; }
+}
+@media (max-width: 640px) {
+  :root[data-theme='quarto'] .hero, :root[data-theme='doce'] .hero, :root[data-theme='estudio'] .hero { padding-right: 0; min-height: 0; }
+  :root[data-theme='quarto'] .hero-art, :root[data-theme='doce'] .hero-art { position: static; width: 100%; max-width: 230px; height: auto; margin: -8px auto 8px; display: block; }
+}
+
+/* ================= 1. Quarto do Rock ================= */
+:root[data-theme='quarto'] {
+  --bg: #cf745c;
+  --surface: #fff4e6;
+  --surface-2: #ffe9d2;
+  --fg: #2b1420;
+  --muted: #6b3a35;
+  --line: #ecc9ad;
+  --line-strong: #3a1a26;
+  --top: #3a1a26;
+  --top-fg: #fff4e6;
+  --accent: #d6304f;
+  --accent-hover: #b8243f;
+  --accent-soft: #ffd9df;
+  --ok: #1d7a55;
+  --ok-soft: #dff3e8;
+  --warn: #9a5a00;
+  --warn-soft: #fff0d6;
+  --bad: #c0283c;
+  --bad-soft: #ffe1e4;
+  --shadow: 6px 6px 0 #3a1a26;
+  --heading-font: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --bat: #3a1a26;
+  color-scheme: light;
+}
+:root[data-theme='quarto'] body {
+  background:
+    repeating-linear-gradient(98deg, transparent 0 118px, rgba(90, 30, 20, 0.22) 118px 121px),
+    repeating-linear-gradient(8deg, transparent 0 6px, rgba(255, 255, 255, 0.035) 6px 8px),
+    var(--bg);
+}
+:root[data-theme='quarto'][data-fonte] .hero h1 { font-family: var(--heading-font); font-size: 46px; letter-spacing: 0.01em; text-transform: none; font-weight: 400; line-height: 1.05; }
+:root[data-theme='quarto'][data-fonte] .card-title,
+:root[data-theme='quarto'][data-fonte] .drop-title,
+:root[data-theme='quarto'][data-fonte] .banner-title,
+:root[data-theme='quarto'][data-fonte] .card h3,
+:root[data-theme='quarto'][data-fonte] .brand,
+:root[data-theme='quarto'][data-fonte] .info-grid h4,
+:root[data-theme='quarto'][data-fonte] .stepper li,
+:root[data-theme='quarto'][data-fonte] .stat-num { font-family: var(--heading-font); letter-spacing: 0.02em; font-weight: 400; }
+:root[data-theme='quarto'][data-fonte] .card-title, :root[data-theme='quarto'][data-fonte] .drop-title { font-size: 22px; }
+:root[data-theme='quarto'] .hero p { color: #3d1c22; }
+:root[data-theme='quarto'] .card,
+:root[data-theme='quarto'] .drop { border: 3px solid var(--line-strong); border-radius: 18px; box-shadow: var(--shadow); }
+:root[data-theme='quarto'] .drop { background: var(--surface); border-style: dashed; }
+:root[data-theme='quarto'] .btn-primary, :root[data-theme='quarto'] .btn-ghost, :root[data-theme='quarto'] .version, :root[data-theme='quarto'] .select, :root[data-theme='quarto'] .input { border: 2.5px solid var(--line-strong); box-shadow: 3px 3px 0 var(--line-strong); }
+:root[data-theme='quarto'] .btn-primary:active, :root[data-theme='quarto'] .version:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--line-strong); }
+:root[data-theme='quarto'] .btn-ghost { background: var(--surface); }
+:root[data-theme='quarto'] .topbar { border-bottom: 4px solid #f28aa0; }
+:root[data-theme='quarto'] .nav-item { color: #2b1420; }
+:root[data-theme='quarto'] .nav-item:hover { background: rgba(255, 244, 230, 0.35); }
+:root[data-theme='quarto'] .nav-item.active { background: var(--surface); border: 2.5px solid var(--line-strong); box-shadow: 3px 3px 0 var(--line-strong); }
+:root[data-theme='quarto'] .nav-group-title, :root[data-theme='quarto'] .howto summary { color: #2b1420; }
+:root[data-theme='quarto'] .stepper li { color: #3d1c22; border-color: rgba(58, 26, 38, 0.3); }
+:root[data-theme='quarto'] .info-grid > div { border-top: 3px solid var(--line-strong); }
+:root[data-theme='quarto'] .info-grid p, :root[data-theme='quarto'] footer, :root[data-theme='quarto'] .footer-inner { color: #3d1c22; }
+:root[data-theme='quarto'] footer { border-top-color: rgba(58, 26, 38, 0.35); }
+:root[data-theme='quarto'] .facts, :root[data-theme='quarto'] .stat, :root[data-theme='quarto'] .finding, :root[data-theme='quarto'] .fix { border-color: #e2b998; }
+:root[data-theme='quarto'] .steam { animation: steam 2.4s ease-in-out infinite; }
+@keyframes steam { 50% { transform: translateY(-4px); opacity: 0.3; } }
+:root[data-theme='quarto'] .vinyl-groove { transform-origin: 272px 199px; animation: spin 3s linear infinite; stroke-dasharray: 20 8; }
+@keyframes spin { to { transform: rotate(360deg); } }
+:root[data-theme='quarto'] .decor-notas { display: block; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+:root[data-theme='quarto'] .nota { position: absolute; color: rgba(255, 244, 230, 0.55); font-size: 26px; animation: boia 6s ease-in-out infinite; }
+.nota-0 { left: 2%; top: 78%; } .nota-1 { left: 22%; top: 92%; animation-delay: -1s; } .nota-2 { left: 94%; top: 30%; animation-delay: -2s; }
+.nota-3 { left: 88%; top: 82%; animation-delay: -3s; } .nota-4 { left: 1%; top: 58%; animation-delay: -4s; } .nota-5 { left: 60%; top: 94%; animation-delay: -2.5s; }
+.nota-6 { left: 97%; top: 60%; animation-delay: -1.5s; } .nota-7 { left: 97%; top: 12%; animation-delay: -3.5s; }
+@keyframes boia { 50% { transform: translateY(-14px) rotate(-8deg); } }
+:root[data-theme='quarto'] .shell, :root[data-theme='quarto'] footer { position: relative; z-index: 1; }
+
+/* ================= 2. Estúdio Noturno (v2, a partir do exemplo da Isabelle) ================= */
+:root[data-theme='estudio'] {
+  --bg: #1d1b1f;
+  --surface: rgba(34, 31, 36, 0.94);
+  --surface-2: #262328;
+  --fg: #e9e4e6;
+  --muted: #a39a9f;
+  --line: #3a3438;
+  --line-strong: #8e1a2c;
+  --top: #161417;
+  --top-fg: #ece6e8;
+  --accent: #c8213a;
+  --accent-hover: #e0334d;
+  --accent-soft: #2d1418;
+  --ok: #6fcf97;
+  --ok-soft: #13241b;
+  --warn: #e3a64a;
+  --warn-soft: #2a2013;
+  --bad: #ff5a6e;
+  --bad-soft: #2e1418;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --heading-font: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono-font: 'IBM Plex Mono', ui-monospace, monospace;
+  --bat: #0a090b;
+  --bat-glow: rgba(200, 33, 58, 0.85);
+  color-scheme: dark;
+}
+/* moldura vermelha: o fundo da página é vermelho-sangue com textura, o site fica num painel escuro */
+:root[data-theme='estudio'] body {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.3), transparent 45%),
+    repeating-radial-gradient(circle at 37% 61%, rgba(0, 0, 0, 0.06) 0 1px, transparent 1px 4px),
+    #7e1020;
+  background-attachment: fixed;
+}
+:root[data-theme='estudio'] .topbar { background: transparent; border-bottom: none; }
+:root[data-theme='estudio'] .topbar-inner { background: var(--top); padding-left: 28px; padding-right: 28px; }
+:root[data-theme='estudio'] .shell { background: var(--bg); position: relative; overflow: hidden; }
+:root[data-theme='estudio'] footer { border-top: none; margin-top: 0; }
+:root[data-theme='estudio'] .footer-inner { background: #161417; padding-left: 28px; padding-right: 28px; color: #8f868b; }
+:root[data-theme='estudio'] .mono, :root[data-theme='estudio'] .nav-tag, :root[data-theme='estudio'] .nav-group-title,
+:root[data-theme='estudio'] .privacy-pill, :root[data-theme='estudio'] .hero p, :root[data-theme='estudio'] .stepper li,
+:root[data-theme='estudio'] .howto summary { font-family: var(--mono-font); }
+:root[data-theme='estudio'] .brand { font-family: var(--heading-font); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 18px; }
+:root[data-theme='estudio'] .brand strong { font-weight: 700; }
+
+/* barra lateral limpa, só tipografia e uma linha vermelha no item ativo */
+:root[data-theme='estudio'] .sidebar { background: transparent; }
+:root[data-theme='estudio'] .nav-group-title { color: #8f868b; font-weight: 500; letter-spacing: 0.12em; }
+:root[data-theme='estudio'] .nav-item { color: #d8d1d4; border-left: 2px solid transparent; border-radius: 0; font-family: var(--mono-font); font-size: 13.5px; }
+:root[data-theme='estudio'] .nav-item:hover { background: rgba(255, 255, 255, 0.03); color: #fff; }
+:root[data-theme='estudio'] .nav-item.active { background: transparent; color: #ff6b7f; border-left-color: var(--accent); }
+:root[data-theme='estudio'] .nav-tag { border-radius: 2px; border-color: rgba(200, 33, 58, 0.6); color: #e7a3ad; background: transparent; }
+:root[data-theme='estudio'] .nav-item.soon .nav-tag { border-color: #3a3438; color: #8f868b; }
+
+/* topo: nome enorme + subtítulo em fonte mono, foto grande com painel vermelho atrás */
+:root[data-theme='estudio'] .hero { min-height: 360px; padding-right: 360px; }
+:root[data-theme='estudio'] .hero-kicker { display: block; font-family: var(--heading-font); font-weight: 700; text-transform: uppercase; font-size: 64px; line-height: 0.95; letter-spacing: -0.01em; color: #e9e4e6; margin-bottom: 14px; }
+:root[data-theme='estudio'][data-fonte] .hero h1 { font-family: var(--mono-font); font-weight: 400; font-size: 24px; line-height: 1.3; text-transform: none; letter-spacing: 0; color: #cfc7cb; text-shadow: none; max-width: 520px; }
+:root[data-theme='estudio'][data-fonte] .hero h1::after { display: none; }
+:root[data-theme='estudio'] .hero p { font-size: 14px; color: #a39a9f; }
+:root[data-theme='estudio'][data-fonte] .card-title,
+:root[data-theme='estudio'][data-fonte] .drop-title,
+:root[data-theme='estudio'][data-fonte] .banner-title,
+:root[data-theme='estudio'][data-fonte] .info-grid h4,
+:root[data-theme='estudio'][data-fonte] .stat-num { font-family: var(--heading-font); font-weight: 500; letter-spacing: 0; text-transform: none; }
+:root[data-theme='estudio'][data-fonte] .card h3 { font-family: var(--heading-font); font-weight: 500; text-transform: none; letter-spacing: 0; font-size: 19px; color: #e9e4e6; }
+:root[data-theme='estudio'][data-fonte] .card-title, :root[data-theme='estudio'][data-fonte] .drop-title { font-size: 20px; }
+:root[data-theme='estudio'] .hero-art-estudio { display: block; position: absolute; right: -24px; top: -18px; width: 380px; height: 470px; z-index: 0; pointer-events: none; }
+.estudio-figura { position: relative; width: 100%; height: 100%; }
+.estudio-painel { position: absolute; left: 34px; top: 120px; width: 250px; height: 250px; background: #7e1020; border: 1px solid #c8213a; }
+.estudio-figura img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%;
+  -webkit-mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%);
+  mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%); }
+:root[data-theme='estudio'] main > *:not(.hero) { position: relative; z-index: 1; }
+
+/* cartões: escuros, borda vermelha fina, cantos quase retos */
+:root[data-theme='estudio'] .card, :root[data-theme='estudio'] .drop { border: 1px solid rgba(200, 33, 58, 0.55); border-radius: 4px; box-shadow: var(--shadow); }
+:root[data-theme='estudio'] .drop { background: rgba(34, 31, 36, 0.9); }
+:root[data-theme='estudio'] .drop:hover, :root[data-theme='estudio'] .drop.dragging { background: rgba(45, 20, 24, 0.92); border-color: var(--accent); }
+:root[data-theme='estudio'] .facts, :root[data-theme='estudio'] .stat, :root[data-theme='estudio'] .finding, :root[data-theme='estudio'] .fix,
+:root[data-theme='estudio'] .xstat, :root[data-theme='estudio'] .table-wrap, :root[data-theme='estudio'] .convert-row { border-radius: 3px; }
+:root[data-theme='estudio'] .btn-primary, :root[data-theme='estudio'] .btn-ghost, :root[data-theme='estudio'] .version, :root[data-theme='estudio'] .select, :root[data-theme='estudio'] .input { border-radius: 3px; }
+:root[data-theme='estudio'] .btn-ghost, :root[data-theme='estudio'] .version { border: 1px solid rgba(200, 33, 58, 0.6); background: transparent; }
+:root[data-theme='estudio'] .version.selected { background: var(--accent); box-shadow: none; }
+:root[data-theme='estudio'] .count, :root[data-theme='estudio'] .chip { border-radius: 2px; border-color: rgba(200, 33, 58, 0.6); background: transparent; }
+:root[data-theme='estudio'] .file-icon { border-radius: 2px; border-color: rgba(200, 33, 58, 0.6); }
+
+/* etapas como barras vermelhas (tipo barra de habilidade) */
+:root[data-theme='estudio'] .stepper li { border-bottom: 4px solid #3a3438; text-transform: none; font-size: 13px; }
+:root[data-theme='estudio'] .stepper li.current, :root[data-theme='estudio'] .stepper li.done { border-color: var(--accent); }
+:root[data-theme='estudio'] .stepper li.done .dot { background: var(--accent); border-color: var(--accent); }
+:root[data-theme='estudio'] .stepper .dot { border-radius: 2px; }
+
+/* comparação como janela de editor de código */
+:root[data-theme='estudio'] .diff { border: 1px solid rgba(200, 33, 58, 0.55); border-radius: 4px; background: #18161a; }
+:root[data-theme='estudio'] .diff::before { content: '● ● ●   comparacao.l5x'; display: block; padding: 6px 12px; background: #8e1a2c; color: #f6d9de; font-family: var(--mono-font); font-size: 11.5px; letter-spacing: 0.04em; }
+:root[data-theme='estudio'] .diff-head { background: #1f1c21; }
+:root[data-theme='estudio'] .diff-line { background: #1a181c; color: #6e666b; }
+
+/* arcos góticos no fundo e galho de espinhos no canto */
+:root[data-theme='estudio'] .decor-gotico { display: block; position: absolute; left: 0; right: 0; top: 0; height: 520px; pointer-events: none; z-index: 0; opacity: 0.5; }
+.decor-gotico path { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 2; }
+:root[data-theme='estudio'] .decor-espinhos { display: block; position: absolute; right: -10px; bottom: 0; width: 360px; height: 260px; pointer-events: none; z-index: 0; opacity: 0.6; }
+.decor-espinhos path { fill: none; stroke: #0e0c0f; stroke-width: 3; stroke-linecap: round; }
+:root[data-theme='estudio'] main { position: relative; z-index: 1; }
+@media (min-width: 901px) { :root[data-theme='estudio'] .sidebar { position: relative; z-index: 1; } }
+
+@media (max-width: 900px) {
+  :root[data-theme='estudio'] .sidebar { background: var(--bg); }
+}
+@media (max-width: 640px) {
+  :root[data-theme='estudio'] .topbar-inner, :root[data-theme='estudio'] .footer-inner { padding-left: 16px; padding-right: 16px; }
+  :root[data-theme='estudio'] .hero { padding-right: 0; min-height: 0; }
+  :root[data-theme='estudio'] .hero-kicker { font-size: 40px; }
+  :root[data-theme='estudio'][data-fonte] .hero h1 { font-size: 18px; }
+  :root[data-theme='estudio'] .hero-art-estudio { position: relative; right: auto; top: auto; width: 100%; max-width: 300px; height: 340px; margin: -10px auto 0; }
+  .estudio-painel { left: 40px; top: 90px; width: 190px; height: 190px; }
+}
+
+/* ================= 3. Doce Macabro ================= */
+:root[data-theme='doce'] {
+  --bg: #ffe3ef;
+  --surface: #ffffff;
+  --surface-2: #fff4f9;
+  --fg: #120c10;
+  --muted: #5d4552;
+  --line: #f4c6da;
+  --line-strong: #120c10;
+  --top: #120c10;
+  --top-fg: #fff4f9;
+  --accent: #ff2e7e;
+  --accent-hover: #e01565;
+  --accent-soft: #ffd6e7;
+  --ok: #138a5a;
+  --ok-soft: #dcf7ea;
+  --warn: #9a5a00;
+  --warn-soft: #fff1cf;
+  --bad: #d4183a;
+  --bad-soft: #ffe0e6;
+  --shadow: 0 7px 0 #120c10;
+  --heading-font: Chewy, 'Comic Sans MS', cursive;
+  --bat: #120c10;
+  color-scheme: light;
+}
+:root[data-theme='doce'] body {
+  background:
+    radial-gradient(circle at 20px 20px, rgba(255, 46, 126, 0.16) 5px, transparent 6px) 0 0 / 48px 48px,
+    radial-gradient(circle at 44px 44px, rgba(79, 195, 255, 0.18) 4px, transparent 5px) 0 0 / 48px 48px,
+    var(--bg);
+}
+:root[data-theme='doce'] .topbar { border-bottom: none; }
+:root[data-theme='doce'] .decor-calda { display: block; position: absolute; top: 64px; left: 0; width: 100%; height: 46px; pointer-events: none; z-index: 19; fill: #120c10; }
+:root[data-theme='doce'] .shell { padding-top: 22px; }
+:root[data-theme='doce'][data-fonte] .hero h1 { font-family: var(--heading-font); font-size: 50px; font-weight: 400; text-transform: none; letter-spacing: 0.01em; line-height: 1.02; color: #120c10; -webkit-text-stroke: 0; text-shadow: 3px 3px 0 #ffd23f; }
+:root[data-theme='doce'][data-fonte] .card-title,
+:root[data-theme='doce'][data-fonte] .drop-title,
+:root[data-theme='doce'][data-fonte] .banner-title,
+:root[data-theme='doce'][data-fonte] .brand,
+:root[data-theme='doce'][data-fonte] .card h3,
+:root[data-theme='doce'][data-fonte] .info-grid h4,
+:root[data-theme='doce'][data-fonte] .stepper li,
+:root[data-theme='doce'][data-fonte] .stat-num { font-family: var(--heading-font); font-weight: 400; letter-spacing: 0.03em; }
+:root[data-theme='doce'][data-fonte] .card-title, :root[data-theme='doce'][data-fonte] .drop-title { font-size: 22px; }
+:root[data-theme='doce'] .card, :root[data-theme='doce'] .drop { border: 4px solid #120c10; border-radius: 24px; box-shadow: var(--shadow); position: relative; }
+:root[data-theme='doce'] .drop { background: #fff; }
+/* calda escorrendo da borda de cima dos cartões */
+:root[data-theme='doce'] .card::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: -4px;
+  width: 120px;
+  height: 30px;
+  background:
+    radial-gradient(circle at 12px 22px, #ff2e7e 8px, transparent 9px),
+    radial-gradient(circle at 54px 28px, #ff2e7e 6px, transparent 7px),
+    radial-gradient(circle at 92px 18px, #ff2e7e 7px, transparent 8px),
+    linear-gradient(#ff2e7e, #ff2e7e) 0 0 / 100% 10px no-repeat,
+    linear-gradient(#ff2e7e, #ff2e7e) 6px 0 / 12px 22px no-repeat,
+    linear-gradient(#ff2e7e, #ff2e7e) 49px 0 / 10px 28px no-repeat,
+    linear-gradient(#ff2e7e, #ff2e7e) 85px 0 / 14px 18px no-repeat;
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+}
+:root[data-theme='doce'] .btn-primary, :root[data-theme='doce'] .btn-ghost, :root[data-theme='doce'] .version, :root[data-theme='doce'] .select, :root[data-theme='doce'] .input { border: 3px solid #120c10; border-radius: 999px; box-shadow: 0 4px 0 #120c10; }
+:root[data-theme='doce'] .btn-primary:active, :root[data-theme='doce'] .version:active { transform: translateY(3px); box-shadow: 0 1px 0 #120c10; }
+:root[data-theme='doce'] .select, :root[data-theme='doce'] .input { border-radius: 14px; }
+:root[data-theme='doce'] .btn-ghost { background: #fff; }
+:root[data-theme='doce'] .version.selected { background: #ffd23f; color: #120c10; }
+:root[data-theme='doce'] .nav-item { border: 3px solid transparent; border-radius: 14px; }
+:root[data-theme='doce'] .nav-item.active { background: #fff; border-color: #120c10; box-shadow: 0 4px 0 #120c10; }
+:root[data-theme='doce'] .nav-item:hover { background: rgba(255, 255, 255, 0.6); }
+:root[data-theme='doce'] .stepper .dot { border: 2.5px solid #120c10; }
+:root[data-theme='doce'] .info-grid > div { border-top: 4px solid #120c10; }
+:root[data-theme='doce'] .doce-bob { animation: bob 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+:root[data-theme='doce'] .doce-bob-2 { animation-delay: -1.4s; }
+@keyframes bob { 50% { translate: 0 6px; } }
+:root[data-theme='doce'] .bubble { animation: bubble 2.6s ease-in infinite; transform-box: fill-box; transform-origin: center; }
+:root[data-theme='doce'] .bubble-2 { animation-delay: -0.9s; }
+:root[data-theme='doce'] .bubble-3 { animation-delay: -1.7s; }
+@keyframes bubble { 0% { translate: 0 0; opacity: 1; scale: 0.6; } 80% { opacity: 1; } 100% { translate: 0 -26px; opacity: 0; scale: 1.2; } }
+@media (max-width: 640px) {
+  :root[data-theme='doce'][data-fonte] .hero h1 { font-size: 34px; }
+  :root[data-theme='quarto'][data-fonte] .hero h1 { font-size: 34px; }
+}

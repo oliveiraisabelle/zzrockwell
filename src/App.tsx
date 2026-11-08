@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { BatSwarm, Decor } from './art/Decor'
 import { L5xTool } from './tools/L5xTool'
 import { Se12Tool } from './tools/Se12Tool'
 import { SoonTool } from './tools/SoonTool'
@@ -20,13 +21,17 @@ function readMode(): Mode {
   }
 }
 
-// O tema escuro é o que veio no <html> (Baixo e Sangue, ou o de ?tema=).
-const initialTheme = document.documentElement.dataset.theme
-const darkTheme = initialTheme && initialTheme !== 'claro' ? initialTheme : 'sangue'
+// O tema "escuro" é o que veio no <html> (Estúdio, ou o de ?tema=).
+// Lido na primeira renderização, depois que o main.tsx aplicou o ?tema=.
+function readDarkTheme(): string {
+  const t = document.documentElement.dataset.theme
+  return t && t !== 'claro' ? t : 'estudio'
+}
 
 function App() {
   const [tool, setTool] = useState<ToolId>(currentTool)
   const [mode, setMode] = useState<Mode>(readMode)
+  const [darkTheme] = useState(readDarkTheme)
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -46,7 +51,7 @@ function App() {
     } catch {
       // sem armazenamento: vale só nesta visita
     }
-  }, [mode])
+  }, [mode, darkTheme])
 
   const active = TOOLS.find((t) => t.id === tool)!
   useEffect(() => {
@@ -67,7 +72,7 @@ function App() {
               <path d="M4 7h16M4 12h16M4 17h16" />
             </svg>
           </button>
-          <a className="brand" href="#/l5x">
+          <a className="brand" href="#/l5x" onDoubleClick={() => window.dispatchEvent(new Event('morcegos'))}>
             <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
               <rect x="2" y="2" width="28" height="28" rx="7" />
               <path d="M9 11h6M9 16h10M9 21h14" />
@@ -106,7 +111,9 @@ function App() {
         </div>
       </header>
 
+      <BatSwarm />
       <div className="shell">
+        <Decor />
         <nav className={`sidebar${menuOpen ? ' open' : ''}`} aria-label="Ferramentas">
           {TOOL_GROUPS.map((g) => (
             <div key={g.id} className="nav-group">

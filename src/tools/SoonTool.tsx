@@ -1,9 +1,12 @@
+import { HeroArt } from '../HeroArt'
 import type { ToolInfo } from './catalog'
 
 export function SoonTool({ tool }: { tool: ToolInfo }) {
   return (
     <section className="hero soon-page">
+      <HeroArt />
       <span className="soon-badge">Em construção</span>
+      <div className="hero-kicker">{tool.name}</div>
       <h1>{tool.name}</h1>
       <p>{tool.summary}</p>
       <div className="card">

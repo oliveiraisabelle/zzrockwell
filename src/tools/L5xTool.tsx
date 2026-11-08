@@ -131,6 +131,7 @@ export function L5xTool() {
     <>
       <section className="hero">
         <HeroArt />
+        <div className="hero-kicker">Conversor L5X</div>
         <h1>Rebaixe projetos L5X para versões anteriores do Logix Designer</h1>
         <p>
           Envie uma exportação L5X, escolha a versão e, se quiser, o novo modelo de CLP. Você recebe o arquivo convertido,
