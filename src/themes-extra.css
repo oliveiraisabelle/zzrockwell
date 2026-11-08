@@ -184,6 +184,17 @@ body.tremor main { animation: tremor 0.45s linear; }
   -webkit-mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%);
   mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%); }
 :root[data-theme='estudio'] main > *:not(.hero) { position: relative; z-index: 1; }
+/* no computador a foto fica menor, presa no canto superior direito da tela (e não do texto) */
+@media (min-width: 641px) {
+  :root[data-theme='estudio'] main, :root[data-theme='estudio'] .hero { position: static; }
+  :root[data-theme='estudio'] .hero > *:not(.hero-art) { position: relative; z-index: 1; }
+  :root[data-theme='estudio'] .hero { min-height: 300px; padding-right: 260px; }
+  :root[data-theme='estudio'] .hero-art-estudio { right: 0; top: 0; width: 300px; height: 380px; }
+}
+@media (min-width: 641px) and (max-width: 1100px) {
+  :root[data-theme='estudio'] .hero { padding-right: 200px; }
+  :root[data-theme='estudio'] .hero-art-estudio { width: 220px; height: 280px; }
+}
 
 /* cartões: escuros, borda vermelha fina, cantos quase retos */
 :root[data-theme='estudio'] .card, :root[data-theme='estudio'] .drop { border: 1px solid rgba(200, 33, 58, 0.55); border-radius: 4px; box-shadow: var(--shadow); }
@@ -225,7 +236,7 @@ body.tremor main { animation: tremor 0.45s linear; }
   :root[data-theme='estudio'] .hero { padding-right: 0; min-height: 0; }
   :root[data-theme='estudio'] .hero-kicker { font-size: 40px; }
   :root[data-theme='estudio'][data-fonte] .hero h1 { font-size: 18px; }
-  :root[data-theme='estudio'] .hero-art-estudio { position: relative; right: auto; top: auto; width: 100%; max-width: 300px; height: 340px; margin: -10px auto 0; }
+  :root[data-theme='estudio'] .hero-art-estudio { position: relative; right: auto; top: auto; width: 100%; max-width: 230px; height: 260px; margin: -10px auto 0; }
   }
 
 /* --- Estúdio, modo claro: papel claro, mesma moldura vermelha e topo escuro --- */
