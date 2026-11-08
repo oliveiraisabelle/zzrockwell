@@ -143,7 +143,10 @@ body.tremor main { animation: tremor 0.45s linear; }
 :root[data-theme='estudio'] footer { border-top: none; margin-top: 0; }
 :root[data-theme='estudio'] .footer-inner { background: #161417; padding-left: 28px; padding-right: 28px; color: #8f868b; }
 /* a moldura é só uma borda fina: o site ocupa a largura toda da tela */
-:root[data-theme='estudio'] body { padding: 0 14px 14px; }
+:root[data-theme='estudio'] body { padding: 14px; }
+/* a página escura sempre preenche a tela, deixando a mesma borda em todos os lados */
+:root[data-theme='estudio'] #root { min-height: calc(100vh - 28px); display: flex; flex-direction: column; }
+:root[data-theme='estudio'] .shell { flex: 1 0 auto; width: 100%; }
 :root[data-theme='estudio'] .topbar-inner, :root[data-theme='estudio'] .shell, :root[data-theme='estudio'] .footer-inner { max-width: none; }
 :root[data-theme='estudio'] main { max-width: 1180px; padding-left: 32px; padding-right: 32px; }
 @media (max-width: 640px) {
