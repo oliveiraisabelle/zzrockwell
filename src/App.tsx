@@ -21,11 +21,11 @@ function readMode(): Mode {
   }
 }
 
-// O tema "escuro" é o que veio no <html> (Baixo e Sangue, ou o de ?tema=).
+// O tema "escuro" é o que veio no <html> (Estúdio, ou o de ?tema=).
 // Lido na primeira renderização, depois que o main.tsx aplicou o ?tema=.
 function readDarkTheme(): string {
   const t = document.documentElement.dataset.theme
-  return t && t !== 'claro' ? t : 'sangue'
+  return t && t !== 'claro' ? t : 'estudio'
 }
 
 function App() {
