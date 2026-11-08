@@ -49,6 +49,11 @@ describe('analyze', () => {
     const targets = availableTargets(analyze(parseL5x(project())))
     expect(targets).toEqual([28, 29, 30, 31, 32])
   })
+
+  it('oferece v37 para um arquivo da v38', () => {
+    const targets = availableTargets(analyze(parseL5x(project({ rev: '38.01' }))))
+    expect(targets[targets.length - 1]).toBe(37)
+  })
 })
 
 describe('convert', () => {
@@ -88,6 +93,24 @@ describe('convert', () => {
 
   it('bloqueia conteúdo protegido', () => {
     const result = convert(project({ extra: '<EncodedData EncodedType="Routine"/>' }), 30)
+    expect(result.ok).toBe(false)
+  })
+
+  it('converte de v38 para v37', () => {
+    const result = convert(project({ rev: '38.01' }), 37)
+    expect(result.ok).toBe(true)
+    expect(result.output).toContain('SoftwareRevision="37.00"')
+  })
+
+  it('bloqueia TIMER_T abaixo da v38', () => {
+    const extra = '<Tags><Tag Name="T1" TagType="Base" DataType="TIMER_T"/></Tags>'
+    const result = convert(project({ rev: '38.01', extra }), 37)
+    expect(result.ok).toBe(false)
+    expect(result.findings.find((f) => /TIMER_T/.test(f.message))?.count).toBe(1)
+  })
+
+  it('bloqueia ControlLogix 5590 abaixo da v38', () => {
+    const result = convert(project({ rev: '38.01', cpu: '1756-L93ES' }), 37)
     expect(result.ok).toBe(false)
   })
 
