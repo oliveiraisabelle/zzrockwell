@@ -230,6 +230,55 @@ body.tremor main { animation: tremor 0.45s linear; }
   .estudio-painel { left: 40px; top: 90px; width: 190px; height: 190px; }
 }
 
+/* --- Estúdio, modo claro: papel claro, mesma moldura vermelha e topo escuro --- */
+:root[data-theme='estudio'][data-modo='claro'] {
+  --bg: #f3eee9;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-2: #ebe4de;
+  --fg: #1d1b1f;
+  --muted: #6b6266;
+  --line: #ddd3cc;
+  --line-strong: #b8243a;
+  --accent: #b51d34;
+  --accent-hover: #93162a;
+  --accent-soft: #f8e3e6;
+  --ok: #1f8a4c;
+  --ok-soft: #e3f4ea;
+  --warn: #a8670f;
+  --warn-soft: #fbf0dc;
+  --bad: #c8213a;
+  --bad-soft: #fbe5e8;
+  --shadow: 0 8px 24px rgba(60, 20, 28, 0.1);
+  --bat: #1d1b1f;
+  --bat-glow: rgba(200, 33, 58, 0.5);
+  color-scheme: light;
+}
+:root[data-theme='estudio'][data-modo='claro'] .nav-group-title { color: #7d7377; }
+:root[data-theme='estudio'][data-modo='claro'] .nav-item { color: #2b272a; }
+:root[data-theme='estudio'][data-modo='claro'] .nav-item:hover { background: rgba(0, 0, 0, 0.04); color: #000; }
+:root[data-theme='estudio'][data-modo='claro'] .nav-item.active { color: var(--accent); }
+:root[data-theme='estudio'][data-modo='claro'] .nav-tag { color: var(--accent); }
+:root[data-theme='estudio'][data-modo='claro'] .nav-item.soon .nav-tag { border-color: #cfc5be; color: #7d7377; }
+:root[data-theme='estudio'][data-modo='claro'] .hero-kicker { color: #1d1b1f; }
+:root[data-theme='estudio'][data-modo='claro'][data-fonte] .hero h1 { color: #3a3437; }
+:root[data-theme='estudio'][data-modo='claro'] .hero p { color: #6b6266; }
+:root[data-theme='estudio'][data-modo='claro'][data-fonte] .card h3 { color: #1d1b1f; }
+:root[data-theme='estudio'][data-modo='claro'] .card, :root[data-theme='estudio'][data-modo='claro'] .drop { border-color: rgba(181, 29, 52, 0.45); }
+:root[data-theme='estudio'][data-modo='claro'] .drop { background: rgba(255, 255, 255, 0.92); }
+:root[data-theme='estudio'][data-modo='claro'] .drop:hover, :root[data-theme='estudio'][data-modo='claro'] .drop.dragging { background: #fbeef0; }
+:root[data-theme='estudio'][data-modo='claro'] .stepper li { border-bottom-color: #ddd3cc; }
+:root[data-theme='estudio'][data-modo='claro'] .diff { background: #fff; }
+:root[data-theme='estudio'][data-modo='claro'] .diff-head { background: #f1ebe6; }
+:root[data-theme='estudio'][data-modo='claro'] .diff-line { background: #f6f1ec; color: #9a9095; }
+:root[data-theme='estudio'][data-modo='claro'] .estudio-painel { background: #c8213a; }
+:root[data-theme='estudio'][data-modo='claro'] .estudio-figura img {
+  -webkit-mask-image: radial-gradient(ellipse 56% 64% at 52% 40%, #000 42%, transparent 70%);
+  mask-image: radial-gradient(ellipse 56% 64% at 52% 40%, #000 42%, transparent 70%); }
+.decor-gotico path { transition: stroke 0.2s; }
+:root[data-theme='estudio'][data-modo='claro'] .decor-gotico path { stroke: rgba(120, 20, 35, 0.08); }
+:root[data-theme='estudio'][data-modo='claro'] .decor-espinhos path { stroke: #3a2a2e; }
+:root[data-theme='estudio'][data-modo='claro'] .decor-espinhos { opacity: 0.35; }
+
 /* ================= 3. Doce Macabro ================= */
 :root[data-theme='doce'] {
   --bg: #ffe3ef;
