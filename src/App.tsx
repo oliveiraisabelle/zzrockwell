@@ -45,7 +45,16 @@ function App() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.dataset.theme = mode === 'claro' ? 'claro' : darkTheme
+    // O Estúdio tem o próprio modo claro; os outros temas usam o tema "claro" de sempre.
+    const root = document.documentElement
+    if (darkTheme === 'estudio') {
+      root.dataset.theme = 'estudio'
+      if (mode === 'claro') root.dataset.modo = 'claro'
+      else delete root.dataset.modo
+    } else {
+      root.dataset.theme = mode === 'claro' ? 'claro' : darkTheme
+      delete root.dataset.modo
+    }
     try {
       localStorage.setItem('modo', mode)
     } catch {
