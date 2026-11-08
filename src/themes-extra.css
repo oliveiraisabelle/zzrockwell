@@ -165,7 +165,7 @@ body.tremor main { animation: tremor 0.45s linear; }
 :root[data-theme='estudio'] .nav-tag { border-radius: 2px; border-color: rgba(200, 33, 58, 0.6); color: #e7a3ad; background: transparent; }
 :root[data-theme='estudio'] .nav-item.soon .nav-tag { border-color: #3a3438; color: #8f868b; }
 
-/* topo: nome enorme + subtítulo em fonte mono, foto grande com painel vermelho atrás */
+/* topo: nome enorme + subtítulo em fonte mono, foto grande esfumada */
 :root[data-theme='estudio'] .hero { min-height: 360px; padding-right: 360px; }
 :root[data-theme='estudio'] .hero-kicker { display: block; font-family: var(--heading-font); font-weight: 700; text-transform: uppercase; font-size: 64px; line-height: 0.95; letter-spacing: -0.01em; color: #e9e4e6; margin-bottom: 14px; }
 :root[data-theme='estudio'][data-fonte] .hero h1 { font-family: var(--mono-font); font-weight: 400; font-size: 24px; line-height: 1.3; text-transform: none; letter-spacing: 0; color: #cfc7cb; text-shadow: none; max-width: 520px; }
@@ -180,7 +180,6 @@ body.tremor main { animation: tremor 0.45s linear; }
 :root[data-theme='estudio'][data-fonte] .card-title, :root[data-theme='estudio'][data-fonte] .drop-title { font-size: 20px; }
 :root[data-theme='estudio'] .hero-art-estudio { display: block; position: absolute; right: -24px; top: -18px; width: 380px; height: 470px; z-index: 0; pointer-events: none; }
 .estudio-figura { position: relative; width: 100%; height: 100%; }
-.estudio-painel { position: absolute; left: 34px; top: 120px; width: 250px; height: 250px; background: #7e1020; border: 1px solid #c8213a; }
 .estudio-figura img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%;
   -webkit-mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%);
   mask-image: radial-gradient(ellipse 62% 70% at 52% 42%, #000 55%, transparent 78%); }
@@ -227,8 +226,7 @@ body.tremor main { animation: tremor 0.45s linear; }
   :root[data-theme='estudio'] .hero-kicker { font-size: 40px; }
   :root[data-theme='estudio'][data-fonte] .hero h1 { font-size: 18px; }
   :root[data-theme='estudio'] .hero-art-estudio { position: relative; right: auto; top: auto; width: 100%; max-width: 300px; height: 340px; margin: -10px auto 0; }
-  .estudio-painel { left: 40px; top: 90px; width: 190px; height: 190px; }
-}
+  }
 
 /* --- Estúdio, modo claro: papel claro, mesma moldura vermelha e topo escuro --- */
 :root[data-theme='estudio'][data-modo='claro'] {
@@ -270,8 +268,7 @@ body.tremor main { animation: tremor 0.45s linear; }
 :root[data-theme='estudio'][data-modo='claro'] .diff { background: #fff; }
 :root[data-theme='estudio'][data-modo='claro'] .diff-head { background: #f1ebe6; }
 :root[data-theme='estudio'][data-modo='claro'] .diff-line { background: #f6f1ec; color: #9a9095; }
-:root[data-theme='estudio'][data-modo='claro'] .estudio-painel { background: #c8213a; }
-:root[data-theme='estudio'][data-modo='claro'] .estudio-figura img {
+:root[data-theme='estudio'][data-modo='claro'] :root[data-theme='estudio'][data-modo='claro'] .estudio-figura img {
   -webkit-mask-image: radial-gradient(ellipse 56% 64% at 52% 40%, #000 42%, transparent 70%);
   mask-image: radial-gradient(ellipse 56% 64% at 52% 40%, #000 42%, transparent 70%); }
 .decor-gotico path { transition: stroke 0.2s; }
