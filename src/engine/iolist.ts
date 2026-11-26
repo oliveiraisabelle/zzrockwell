@@ -22,6 +22,8 @@ export interface IoModule {
   size?: number
   /** true quando a quantidade foi deduzida pelos pontos usados. */
   sizeGuessed: boolean
+  /** Modelo exato informado (pela foto do I/O Configuration ou digitado). */
+  exactModel?: string
 }
 
 export interface AliasRef {
@@ -278,6 +280,22 @@ function rawTarget(alias: string, aliases: Map<string, RawAlias>, depth = 0): st
 export interface BuildOptions {
   /** Inclui os pontos livres de cada módulo como "Reserva". */
   spares?: boolean
+  /**
+   * Modelo exato de cada cartão, ex.: { 'rack1|4': '1756-IB32' }.
+   * A chave é moduleKey(rack, slot). Vale mais que o tipo genérico do CSV.
+   */
+  models?: Record<string, string>
+}
+
+export function moduleKey(adapter: string, slot: number): string {
+  return `${adapter.toLowerCase()}|${slot}`
+}
+
+/** Deixa o modelo no formato 1756-IB32 (tira revisão /B, espaços etc.). */
+export function normalizeModel(raw: string): string {
+  const m = /^\s*(\d{4})\s*[-_ ]?\s*([A-Za-z0-9]+)/.exec(raw)
+  if (!m) return raw.trim().toUpperCase()
+  return `${m[1]}-${m[2].toUpperCase()}`
 }
 
 export function buildIoList(text: string, opts: BuildOptions = {}): IoList {
@@ -333,6 +351,18 @@ export function buildIoList(text: string, opts: BuildOptions = {}): IoList {
         sizeGuessed: false,
       })
     }
+  }
+
+  // Modelo exato informado pela pessoa: corrige tipo e quantidade de pontos.
+  for (const [key, raw] of Object.entries(opts.models ?? {})) {
+    const m = modules.get(key)
+    const model = raw.trim() ? normalizeModel(raw) : ''
+    if (!m || !model) continue
+    const info = describeModule(model.replace('-', '_'))
+    m.exactModel = model
+    m.catalog = model
+    if (info.kind !== 'OUTRO') m.kind = info.kind
+    if (info.size !== undefined) m.size = info.size
   }
 
   // Aliases por nome, para resolver alias de alias.
@@ -416,7 +446,7 @@ export function buildIoList(text: string, opts: BuildOptions = {}): IoList {
     if (m.kind === 'REDE' || m.kind === 'OUTRO') continue
     const dir = m.kind === 'DI' || m.kind === 'AI' ? 'Entrada' : 'Saída'
     const max = used.get(modKey(m.adapter, m.slot) + '|' + dir) ?? -1
-    if (m.size === undefined || m.size <= max) {
+    if (!m.exactModel && (m.size === undefined || m.size <= max)) {
       m.sizeGuessed = true
       m.size = m.kind === 'DI' || m.kind === 'DO' ? (max >= 16 ? 32 : max >= 8 ? 16 : max >= 0 ? 16 : undefined) : max + 1 || undefined
     }
