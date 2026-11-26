@@ -83,7 +83,7 @@ export function decodeCsv(buf: ArrayBuffer | Uint8Array): string {
 }
 
 /** Separa uma linha de CSV com campos entre aspas ("" vira "). */
-export function splitCsvLine(line: string): string[] {
+export function splitCsvLine(line: string, sep = ','): string[] {
   const out: string[] = []
   let cur = ''
   let quoted = false
@@ -97,7 +97,7 @@ export function splitCsvLine(line: string): string[] {
         } else quoted = false
       } else cur += c
     } else if (c === '"') quoted = true
-    else if (c === ',') {
+    else if (c === sep) {
       out.push(cur)
       cur = ''
     } else cur += c
@@ -107,17 +107,33 @@ export function splitCsvLine(line: string): string[] {
 }
 
 /** Linhas lógicas: um campo entre aspas pode ter quebra de linha dentro. */
+/**
+ * O separador depende da configuração regional do Windows: em português o
+ * Excel e o software do CLP costumam usar ponto e vírgula. Decide pela linha
+ * de cabeçalho (TYPE;SCOPE;NAME...) ou, sem ela, pela primeira linha.
+ */
+export function detectSeparator(text: string): ',' | ';' | '\t' {
+  const head = /^TYPE\s*([,;\t])\s*SCOPE/im.exec(text) ?? /^remark\s*([,;\t])/im.exec(text)
+  if (head) return head[1] as ',' | ';' | '\t'
+  const first = text.split(/\r?\n/, 1)[0] ?? ''
+  const count = (c: string) => first.split(c).length - 1
+  if (count(';') > count(',')) return ';'
+  if (count('\t') > count(',')) return '\t'
+  return ','
+}
+
 function csvRows(text: string): string[][] {
+  const sep = detectSeparator(text)
   const rows: string[][] = []
   let buf = ''
   for (const raw of text.split(/\r?\n/)) {
     buf = buf ? buf + '\n' + raw : raw
     const quotes = (buf.match(/"/g) ?? []).length
     if (quotes % 2 === 1) continue
-    if (buf.trim()) rows.push(splitCsvLine(buf))
+    if (buf.trim()) rows.push(splitCsvLine(buf, sep))
     buf = ''
   }
-  if (buf.trim()) rows.push(splitCsvLine(buf))
+  if (buf.trim()) rows.push(splitCsvLine(buf, sep))
   return rows
 }
 
@@ -266,7 +282,7 @@ export interface BuildOptions {
 
 export function buildIoList(text: string, opts: BuildOptions = {}): IoList {
   const rows = csvRows(text)
-  const headerOk = rows.some((r) => r[0] === 'TYPE' && r[2] === 'NAME')
+  const headerOk = rows.some((r) => r[0]?.trim().toUpperCase() === 'TYPE' && r[2]?.trim().toUpperCase() === 'NAME')
   if (!headerOk) {
     throw new TagCsvError(
       'Este arquivo não parece ser o CSV de tags exportado do CLP. Ele precisa ter as colunas TYPE, SCOPE, NAME, DESCRIPTION, DATATYPE.',
