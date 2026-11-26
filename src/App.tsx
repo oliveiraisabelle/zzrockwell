@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BatSwarm, Decor } from './art/Decor'
+import { IoListTool } from './tools/IoListTool'
 import { L5xTool } from './tools/L5xTool'
 import { Se12Tool } from './tools/Se12Tool'
 import { SoonTool } from './tools/SoonTool'
@@ -144,7 +145,15 @@ function App() {
         {menuOpen && <div className="scrim" onClick={() => setMenuOpen(false)} />}
 
         <main>
-          {tool === 'l5x' ? <L5xTool /> : tool === 'telas-se12' ? <Se12Tool key={tool} /> : <SoonTool tool={active} />}
+          {tool === 'l5x' ? (
+            <L5xTool />
+          ) : tool === 'lista-io' ? (
+            <IoListTool key={tool} />
+          ) : tool === 'telas-se12' ? (
+            <Se12Tool key={tool} />
+          ) : (
+            <SoonTool tool={active} />
+          )}
         </main>
       </div>
 
