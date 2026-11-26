@@ -1,6 +1,6 @@
 import { HeroArt } from '../HeroArt'
 import { useEffect, useMemo, useState } from 'react'
-import { matchIoConfig, mergeMatches, parseIoConfigText, type ConfigHit } from '../engine/ioconfig'
+import { matchIoConfig, mergeMatches, parseIoConfigText } from '../engine/ioconfig'
 import {
   buildIoList,
   decodeCsv,
@@ -24,12 +24,13 @@ type Filter = 'todos' | PointType
 
 type PhotoState =
   | { state: 'idle' }
-  | { state: 'reading'; name: string; progress: number }
-  | { state: 'done'; name: string; found: number; unmatched: ConfigHit[] }
-  | { state: 'error'; name: string }
+  | { state: 'reading'; name: string; url: string; progress: number }
+  | { state: 'done'; name: string; url: string; texts: string[] }
+  | { state: 'error'; name: string; url: string }
 
 const PREVIEW_ROWS = 400
 const XLSX_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+const IGNORE_UNMATCHED = /-(CNB|EN|DNB|AENT|L\d)/
 
 export function IoListTool() {
   const [loaded, setLoaded] = useState<Loaded>()
@@ -38,10 +39,10 @@ export function IoListTool() {
   const [filter, setFilter] = useState<Filter>('todos')
   const [search, setSearch] = useState('')
   const [busy, setBusy] = useState(false)
-  // Modelo exato de cada cartão (da foto ou digitado). Chave: moduleKey(rack, slot).
-  const [models, setModels] = useState<Record<string, string>>({})
-  const [fromPhoto, setFromPhoto] = useState<Record<string, string>>({})
   const [photo, setPhoto] = useState<PhotoState>({ state: 'idle' })
+  // Modelos digitados/corrigidos na tabela. Chave: moduleKey(rack, slot).
+  const [edits, setEdits] = useState<Record<string, string>>({})
+  const [manual, setManual] = useState(false)
 
   // Lista só com o que veio no CSV, para a tabela de modelos mostrar o original.
   const base = useMemo(() => {
@@ -53,6 +54,16 @@ export function IoListTool() {
     }
   }, [loaded])
 
+  // A foto pode vir antes ou depois do CSV: o texto lido fica guardado e é
+  // ligado aos cartões quando os dois estão aqui.
+  const photoMatch = useMemo(() => {
+    if (!base || photo.state !== 'done') return undefined
+    const adapters = [...new Set(base.modules.map((m) => m.adapter))]
+    return mergeMatches(photo.texts.map((t) => matchIoConfig(parseIoConfigText(t, adapters), base.modules)))
+  }, [base, photo])
+
+  const models = useMemo(() => ({ ...(photoMatch?.models ?? {}), ...edits }), [photoMatch, edits])
+
   const list = useMemo(() => {
     if (!loaded) return undefined
     try {
@@ -62,25 +73,34 @@ export function IoListTool() {
     }
   }, [loaded, spares, models])
 
-  async function onPhoto(file: Blob | undefined, name = 'imagem colada') {
-    if (!file || !base || photo.state === 'reading') return
-    setPhoto({ state: 'reading', name, progress: 0 })
+  async function onPhoto(file: Blob | undefined, name = 'print colado') {
+    if (!file || photo.state === 'reading') return
+    if (!file.type.startsWith('image/')) {
+      setError('A foto precisa ser uma imagem (PNG, JPG...). O CSV vai no quadro 1.')
+      return
+    }
+    setError(undefined)
+    if (photo.state !== 'idle') URL.revokeObjectURL(photo.url)
+    const url = URL.createObjectURL(file)
+    setEdits({})
+    setPhoto({ state: 'reading', name, url, progress: 0 })
     try {
       const { readImageTexts } = await import('./ocr')
-      const texts = await readImageTexts(file, (progress) => setPhoto({ state: 'reading', name, progress }))
-      const adapters = [...new Set(base.modules.map((m) => m.adapter))]
-      const match = mergeMatches(texts.map((t) => matchIoConfig(parseIoConfigText(t, adapters), base.modules)))
-      setFromPhoto(match.models)
-      setModels((prev) => ({ ...prev, ...match.models }))
-      setPhoto({ state: 'done', name, found: Object.keys(match.models).length, unmatched: match.unmatched })
+      const texts = await readImageTexts(file, (progress) => setPhoto({ state: 'reading', name, url, progress }))
+      setPhoto({ state: 'done', name, url, texts })
     } catch {
-      setPhoto({ state: 'error', name })
+      setPhoto({ state: 'error', name, url })
     }
   }
 
-  // Ctrl+V com um print da tela também funciona.
+  function removePhoto() {
+    if (photo.state !== 'idle') URL.revokeObjectURL(photo.url)
+    setPhoto({ state: 'idle' })
+    setEdits({})
+  }
+
+  // Ctrl+V com um print da tela vai direto para o quadro da foto.
   useEffect(() => {
-    if (!loaded) return
     const onPaste = (e: ClipboardEvent) => {
       const item = [...(e.clipboardData?.items ?? [])].find((i) => i.type.startsWith('image/'))
       const blob = item?.getAsFile()
@@ -98,10 +118,13 @@ export function IoListTool() {
     setError(undefined)
     setFilter('todos')
     setSearch('')
-    setModels({})
-    setFromPhoto({})
-    setPhoto({ state: 'idle' })
+    setEdits({})
     if (!f) return
+    if (f.type.startsWith('image/')) {
+      // Imagem solta no quadro do CSV: leva para o da foto.
+      void onPhoto(f, f.name)
+      return
+    }
     try {
       const text = decodeCsv(await f.arrayBuffer())
       const test = buildIoList(text)
@@ -151,6 +174,7 @@ export function IoListTool() {
   const ioModules = list?.modules.filter((m) => m.kind !== 'REDE' && m.kind !== 'OUTRO') ?? []
   const guessed = ioModules.filter((m) => m.sizeGuessed)
   const shared = list?.points.filter((p) => p.aliases.length > 1).length ?? 0
+  const unmatchedHits = photoMatch?.unmatched.filter((h) => !IGNORE_UNMATCHED.test(h.model)) ?? []
 
   return (
     <>
@@ -160,7 +184,8 @@ export function IoListTool() {
         <h1>Só as entradas e saídas, numa planilha arrumada</h1>
         <p>
           Envie o CSV de tags exportado do projeto do CLP. O site acha os módulos de I/O, junta cada ponto com o
-          comentário e a tag que aponta para ele e monta um Excel pronto para usar.
+          comentário e a tag que aponta para ele e monta um Excel pronto para usar. Se quiser, mande também um print da
+          árvore I/O Configuration para a planilha usar o modelo exato de cada cartão.
         </p>
         <details className="howto">
           <summary>Como usar</summary>
@@ -169,7 +194,11 @@ export function IoListTool() {
               Com o projeto aberto no software do CLP, vá em <b>Tools &gt; Export Tags</b> (ou{' '}
               <b>Tools &gt; Import/Export</b>) e exporte as tags do controlador como CSV.
             </li>
-            <li>Arraste o CSV aqui. A lista aparece na hora, com filtros por tipo.</li>
+            <li>Arraste o CSV no quadro 1. A lista aparece na hora, com filtros por tipo.</li>
+            <li>
+              Opcional: expanda todos os racks na árvore <b>I/O Configuration</b>, tire um print (tecla Print Screen ou
+              Win+Shift+S) e cole aqui com Ctrl+V, ou arraste a imagem no quadro 2.
+            </li>
             <li>
               Baixe a planilha. Ela vem com a aba <b>Lista de IO</b>, um <b>Resumo</b> por módulo e, se houver, a aba{' '}
               <b>Rede</b> com os pontos de rede comentados.
@@ -178,14 +207,88 @@ export function IoListTool() {
         </details>
       </section>
 
-      {!loaded && (
-        <FileDrop
-          accept=".csv,.CSV"
-          title="Arraste o CSV de tags aqui"
-          hint="exportado pelo Export Tags do projeto do CLP"
-          onFile={onFile}
-        />
-      )}
+      <section className="io-uploads">
+        <div className={`io-upload${loaded ? ' io-upload-done' : ''}`}>
+          <div className="io-upload-head">
+            <span className="io-step">1</span>
+            <span className="io-upload-title">CSV de tags</span>
+            <span className="io-req io-req-on">Obrigatório</span>
+          </div>
+          {loaded && list ? (
+            <div className="io-picked">
+              <div className="file-icon">CSV</div>
+              <div className="file-meta">
+                <div className="file-name">{loaded.name}</div>
+                <div className="muted small">
+                  {formatSize(loaded.size)}
+                  {list.software && ` · software ${list.software}`}
+                </div>
+              </div>
+              <button className="btn-ghost" onClick={() => onFile(undefined)}>
+                Trocar
+              </button>
+            </div>
+          ) : (
+            <FileDrop
+              compact
+              accept=".csv,.CSV"
+              title="Arraste o CSV aqui"
+              hint="do Export Tags"
+              onFile={onFile}
+            />
+          )}
+        </div>
+
+        <div className={`io-upload${photo.state === 'done' ? ' io-upload-done' : ''}`}>
+          <div className="io-upload-head">
+            <span className="io-step">2</span>
+            <span className="io-upload-title">Print do I/O Configuration</span>
+            <span className="io-req">Opcional</span>
+          </div>
+          {photo.state === 'idle' ? (
+            <FileDrop
+              compact
+              icon="image"
+              accept="image/*"
+              title="Arraste a imagem ou cole com Ctrl+V"
+              hint="deixa os modelos dos cartões exatos"
+              onFile={(f) => void onPhoto(f, f?.name)}
+            />
+          ) : (
+            <div className="io-picked">
+              <img className="io-thumb" src={photo.url} alt="Print do I/O Configuration enviado" />
+              <div className="file-meta">
+                <div className="file-name">{photo.name}</div>
+                {photo.state === 'reading' && (
+                  <div className="io-photo-status">
+                    Lendo os modelos… {Math.round(photo.progress * 100)}%
+                    <div className="io-progress">
+                      <span style={{ width: `${Math.round(photo.progress * 100)}%` }} />
+                    </div>
+                  </div>
+                )}
+                {photo.state === 'done' && !photoMatch && (
+                  <div className="muted small">Lida. Agora envie o CSV no quadro 1.</div>
+                )}
+                {photo.state === 'done' && photoMatch && (
+                  <div className={`small ${Object.keys(photoMatch.models).length ? 'ok-text' : 'warn-text'}`}>
+                    {Object.keys(photoMatch.models).length
+                      ? `Achei o modelo de ${Object.keys(photoMatch.models).length} ${Object.keys(photoMatch.models).length === 1 ? 'cartão' : 'cartões'}`
+                      : 'Não achei modelos nesta imagem'}
+                  </div>
+                )}
+                {photo.state === 'error' && <div className="small bad-text">Não consegui ler a imagem.</div>}
+              </div>
+              <button className="btn-ghost" onClick={removePhoto} disabled={photo.state === 'reading'}>
+                Remover
+              </button>
+            </div>
+          )}
+          <p className="io-upload-note muted small">
+            A imagem é lida no seu navegador e não é enviada para lugar nenhum.
+          </p>
+        </div>
+      </section>
 
       {error && (
         <div className="alert alert-bad" role="alert">
@@ -195,20 +298,6 @@ export function IoListTool() {
 
       {loaded && list && (
         <section className="card">
-          <div className="file-head">
-            <div className="file-icon">CSV</div>
-            <div className="file-meta">
-              <div className="file-name">{loaded.name}</div>
-              <div className="muted">
-                {formatSize(loaded.size)}
-                {list.software && ` · software ${list.software}`}
-              </div>
-            </div>
-            <button className="btn-ghost" onClick={() => onFile(undefined)}>
-              Trocar arquivo
-            </button>
-          </div>
-
           <dl className="facts">
             <div>
               <dt>Módulos de I/O</dt>
@@ -244,7 +333,7 @@ export function IoListTool() {
               {guessed.length > 0 && (
                 <div>
                   Em {guessed.length} {guessed.length === 1 ? 'módulo' : 'módulos'} o CSV não diz quantos pontos o
-                  cartão tem. Estimei pelos pontos usados (16 ou 32); confira as reservas.
+                  cartão tem. Estimei pelos pontos usados (16 ou 32). O print do I/O Configuration resolve isso.
                 </div>
               )}
               {shared > 0 && (
@@ -256,119 +345,85 @@ export function IoListTool() {
             </div>
           )}
 
-          <details className="learn io-config" open={Object.keys(models).length > 0}>
-            <summary>
-              Tem uma foto do I/O Configuration? Use os modelos exatos dos cartões <span className="muted">(opcional)</span>
-            </summary>
-            <p className="muted small">
-              O CSV às vezes só diz "cartão digital", sem dizer se tem 16 ou 32 pontos. Mande um print ou foto da árvore{' '}
-              <b>I/O Configuration</b> do projeto (com os cartões expandidos) e o site lê os modelos, como 1756-IB32. A
-              imagem é lida aqui no navegador e não é enviada para lugar nenhum. Confira a tabela: dá para corrigir ou
-              digitar qualquer modelo.
-            </p>
-            <div className="io-photo-row">
-              <label className={`btn-ghost io-photo-btn${photo.state === 'reading' ? ' io-disabled' : ''}`}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  disabled={photo.state === 'reading'}
-                  onChange={(e) => {
-                    const f = e.target.files?.[0]
-                    e.target.value = ''
-                    if (f) void onPhoto(f, f.name)
-                  }}
-                />
-                Enviar foto ou print
-              </label>
-              <span className="muted small">ou cole um print com Ctrl+V</span>
-              {Object.keys(models).length > 0 && (
-                <button
-                  className="btn-ghost"
-                  onClick={() => {
-                    setModels({})
-                    setFromPhoto({})
-                    setPhoto({ state: 'idle' })
-                  }}
-                >
-                  Limpar modelos
-                </button>
-              )}
-            </div>
-            {photo.state === 'reading' && (
-              <div className="io-photo-status">
-                Lendo {photo.name}… {Math.round(photo.progress * 100)}%
-                <div className="io-progress">
-                  <span style={{ width: `${Math.round(photo.progress * 100)}%` }} />
+          {photo.state !== 'idle' || manual || Object.keys(edits).length > 0 ? (
+            <div className="io-models-box">
+              <div className="io-models-head">
+                <h3>Modelos dos cartões</h3>
+                <span className="muted small">
+                  {photoMatch
+                    ? 'Preenchidos pela imagem. Confira e corrija o que precisar.'
+                    : 'Digite o modelo de cada cartão, ex.: 1756-IB32.'}
+                </span>
+              </div>
+              {photo.state === 'done' && photoMatch && Object.keys(photoMatch.models).length === 0 && (
+                <div className="alert alert-warn">
+                  Não consegui ler nenhum modelo nesse print. Tente um print mais nítido, com os racks expandidos, ou
+                  digite os modelos abaixo.
                 </div>
+              )}
+              {unmatchedHits.length > 0 && (
+                <div className="alert alert-warn">
+                  Não soube em que rack colocar: {unmatchedHits.map((h) => `[${h.slot}] ${h.model}`).join(', ')}. Digite
+                  esses na tabela.
+                </div>
+              )}
+              <div className="table-wrap io-models">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Rack</th>
+                      <th>Slot</th>
+                      <th>No CSV</th>
+                      <th>Modelo exato</th>
+                      <th>Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {base?.modules.map((m) => {
+                      const key = moduleKey(m.adapter, m.slot)
+                      const now = list.modules.find((x) => moduleKey(x.adapter, x.slot) === key)
+                      const auto = photoMatch?.models[key] !== undefined && edits[key] === undefined
+                      return (
+                        <tr key={key}>
+                          <td className="mono">{m.adapter}</td>
+                          <td className="mono">{m.slot}</td>
+                          <td>
+                            <span className="mono">{m.catalog}</span>{' '}
+                            <span className="muted small">{MODULE_LABEL[m.kind]}</span>
+                          </td>
+                          <td>
+                            <input
+                              className="input mono io-model-input"
+                              value={models[key] ?? ''}
+                              placeholder={m.catalog}
+                              aria-label={`Modelo exato do slot ${m.slot} de ${m.adapter}`}
+                              onChange={(e) => setEdits((prev) => ({ ...prev, [key]: e.target.value }))}
+                            />
+                            {auto && <span className="badge io-badge-photo">da foto</span>}
+                          </td>
+                          <td className="mono">
+                            {now?.kind === 'REDE' || now?.kind === 'OUTRO' ? '—' : (now?.size ?? '?')}
+                            {now?.sizeGuessed && <span className="muted small"> estimado</span>}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
               </div>
-            )}
-            {photo.state === 'done' && (
-              <div className={`alert ${photo.found > 0 ? 'alert-ok' : 'alert-warn'}`}>
-                {photo.found > 0
-                  ? `Achei o modelo de ${photo.found} ${photo.found === 1 ? 'cartão' : 'cartões'} na imagem. Confira abaixo.`
-                  : 'Não consegui achar nenhum modelo nessa imagem. Tente um print mais nítido, com os cartões expandidos, ou digite os modelos na tabela.'}
-                {photo.unmatched.filter((h) => !/-(CNB|EN|DNB|AENT|L\d)/.test(h.model)).length > 0 && (
-                  <div className="small">
-                    Não soube em que rack colocar:{' '}
-                    {photo.unmatched
-                      .filter((h) => !/-(CNB|EN|DNB|AENT|L\d)/.test(h.model))
-                      .map((h) => `[${h.slot}] ${h.model}`)
-                      .join(', ')}
-                    . Digite esses na tabela.
-                  </div>
-                )}
-              </div>
-            )}
-            {photo.state === 'error' && (
-              <div className="alert alert-bad">Não consegui ler a imagem. Tente outro arquivo ou digite os modelos.</div>
-            )}
-
-            <div className="table-wrap io-models">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Rack</th>
-                    <th>Slot</th>
-                    <th>No CSV</th>
-                    <th>Modelo exato</th>
-                    <th>Pontos</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {base?.modules.map((m) => {
-                    const key = moduleKey(m.adapter, m.slot)
-                    const now = list?.modules.find((x) => moduleKey(x.adapter, x.slot) === key)
-                    const auto = fromPhoto[key] !== undefined && fromPhoto[key] === models[key]
-                    return (
-                      <tr key={key}>
-                        <td className="mono">{m.adapter}</td>
-                        <td className="mono">{m.slot}</td>
-                        <td>
-                          <span className="mono">{m.catalog}</span>{' '}
-                          <span className="muted small">{MODULE_LABEL[m.kind]}</span>
-                        </td>
-                        <td>
-                          <input
-                            className="input mono io-model-input"
-                            value={models[key] ?? ''}
-                            placeholder={m.catalog}
-                            aria-label={`Modelo exato do slot ${m.slot} de ${m.adapter}`}
-                            onChange={(e) => setModels((prev) => ({ ...prev, [key]: e.target.value }))}
-                          />
-                          {auto && <span className="badge io-badge-photo">da foto</span>}
-                        </td>
-                        <td className="mono">
-                          {now?.kind === 'REDE' || now?.kind === 'OUTRO' ? '—' : (now?.size ?? '?')}
-                          {now?.sizeGuessed && <span className="muted small"> estimado</span>}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
             </div>
-          </details>
+          ) : (
+            guessed.length > 0 && (
+              <div className="io-hint">
+                <span>
+                  Para os pontos ficarem exatos, mande o <b>print do I/O Configuration</b> no quadro 2 lá em cima, ou
+                </span>
+                <button className="btn-ghost" onClick={() => setManual(true)}>
+                  digite os modelos à mão
+                </button>
+              </div>
+            )
+          )}
 
           <div className="divider" />
 
