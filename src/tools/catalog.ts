@@ -1,7 +1,7 @@
 // Lista das ferramentas do site. Para adicionar uma nova, inclua aqui e
 // crie o componente dela em src/tools.
 
-export type ToolId = 'l5x' | 'telas-se12' | 'global-objects' | 'visualizador' | 'alarmes'
+export type ToolId = 'l5x' | 'lista-io' | 'telas-se12' | 'global-objects' | 'visualizador' | 'alarmes'
 
 export interface ToolInfo {
   id: ToolId
@@ -27,6 +27,15 @@ export const TOOLS: ToolInfo[] = [
     tag: 'v20–38',
     ready: true,
     summary: 'Rebaixa a versão e troca o modelo do CLP em exportações L5X.',
+    plans: [],
+  },
+  {
+    id: 'lista-io',
+    group: 'logix',
+    name: 'Lista de I/O',
+    tag: 'CSV→Excel',
+    ready: true,
+    summary: 'Tira do CSV de tags só as entradas e saídas e monta uma planilha organizada.',
     plans: [],
   },
   {
