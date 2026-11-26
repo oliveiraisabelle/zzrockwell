@@ -103,6 +103,17 @@ describe('buildIoList', () => {
     ])
   })
 
+  it('aceita CSV com ponto e vírgula (Windows em português)', () => {
+    const semi = csv
+      .split('\r\n')
+      .map((l) => l.replace(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/g, ';'))
+      .join('\r\n')
+    expect(semi).toContain('TYPE;SCOPE;NAME')
+    const l2 = buildIoList(semi, { spares: true })
+    expect(l2.counts).toEqual(list.counts)
+    expect(l2.points.length).toBe(list.points.length)
+  })
+
   it('recusa arquivo que não é CSV de tags', () => {
     expect(() => buildIoList('a,b,c\n1,2,3')).toThrow(TagCsvError)
   })
