@@ -338,3 +338,14 @@ footer { border-top: 1px solid var(--line); margin-top: 24px; }
 .io-table-wrap { max-height: 460px; }
 .io-table td.io-desc { white-space: normal; min-width: 260px; }
 .io-spare td { color: var(--muted); font-style: italic; }
+.io-config summary { flex-wrap: wrap; }
+.io-photo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+.io-photo-btn { cursor: pointer; }
+.io-disabled { opacity: 0.5; pointer-events: none; }
+.io-photo-status { font-size: 13.5px; margin: 6px 0 10px; }
+.io-progress { height: 6px; margin-top: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; max-width: 360px; }
+.io-progress span { display: block; height: 100%; background: var(--accent); transition: width 0.2s; }
+.io-models { max-height: 360px; }
+.io-model-input { width: 150px; padding: 5px 8px; font-size: 13px; }
+.io-badge-photo { margin-left: 8px; background: var(--ok-soft); color: var(--ok); }
+.alert-ok { background: var(--ok-soft); color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 30%, transparent); }

@@ -184,7 +184,9 @@ export async function buildIoListXlsx(list: IoList, meta: XlsxMeta): Promise<Uin
       io ? (m.size ?? '') : '',
       io ? usedN : '',
       io && m.size ? Math.max(0, m.size - usedN) : '',
-      m.kind === 'REDE'
+      m.exactModel
+        ? 'Modelo informado (I/O Configuration)'
+        : m.kind === 'REDE'
         ? 'Os pontos desta rede estão na aba Rede'
         : m.sizeGuessed && m.size
           ? 'Quantidade de pontos estimada; confira o modelo'
